@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>自定义服务</title>
+		<script src="../lib/angular.min.1.5.js"></script>
+	</head>
+	<body>
+		<div ng-app="myApp" ng-controller="myAppCon">
+			<h1>{{ number }}</h1>
+		</div>
+		<script>
+			var app = angular.module('myApp', []);
+			
+			app.service('number',function(){
+				this.sum = function(num1,num2){
+					return num1 + num2;
+				}
+			});
+			//自定义服务，注入系统的 $http 服务
+			app.service('mydata',['$http',function($http){
+				this.getdata = function(){
+					//返回一个 promise 对象
+					return new Promise(function(resolve,error){
+						$http.get('../day2/data.json')
+						.then(function(response){
+							resolve(response);
+						})
+					});
+				}
+			}]);
+			
+			app.controller('myAppCon',['$scope','mydata',function($scope,mydata){
+				//接收 promise 对象
+				var promise = mydata.getdata();
+				//添加一个 then 方法（添加一个管道的处理）
+				promise.then(function(response){
+					console.log(response);
+				});
+			}]);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>ng-include</title>
+		<script src="../lib/angular.min.1.5.js"></script>
+	</head>
+	<body>
+		<div ng-app="myApp" ng-controller="myAppCon" ng-init="header='./header.html'">
+		
+			<div ng-include="header"></div>
+		</div>
+		<script>
+			angular.module('myApp', [])
+				.controller('myAppCon',['$scope',function($scope){
+//					$scope.header = './header.html';
+				}]);
+		</script>
+	</body>
+</html>

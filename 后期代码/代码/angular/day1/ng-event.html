@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>指令 - ng-list</title>
+	<script src="../lib/angular.min.1.5.js"></script>
+</head>
+<body>
+	
+<div ng-app="myApp">
+	<div ng-controller="myCon">
+		<button ng-click="click()">单选</button>
+		<button ng-dblclick="dblclick()">双击</button>
+		
+		<input type="text" value="选中后剪切" ng-cut="cut_state = true"/>
+		
+		<p ng-if="cut_state">
+			你使用了组合件 ctrl + x ： {{ cut_state }}
+		</p>
+		
+	</div>
+</div>
+
+<script>
+	// 一个页面只允许有一个 app
+	var app = angular.module('myApp', []); //创建一个 module 对象
+	//绑定一个控制器
+	// 注入服务
+	// $scope 是一个服务 表示当前控制器
+	app.controller('myCon', ['$scope',function($scope) {
+		$scope.click = function(){
+			alert("单选")
+		}
+		
+		$scope.dblclick = function(){
+			alert("双击")
+		}
+	}]);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>$timeout</title>
+		<script src="../lib/angular.min.1.5.js"></script>
+	</head>
+	<body>
+		<div ng-app="myApp" ng-controller="myAppCon">
+			<h1>{{ number }}</h1>
+		</div>
+		<script>
+			angular.module('myApp', [])
+				.controller('myAppCon',['$scope','$interval',function($scope,$interval){
+					$interval(function(){
+						$scope.number = Math.random();
+					},1000);
+				}]);
+		</script>
+	</body>
+</html>

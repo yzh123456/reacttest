@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script>
+			console.time('Promise');
+			// resolve 执行成功后调用
+			// reject  执行失败时调用
+			new Promise(function(resolve, reject){
+				setTimeout(function(){
+					resolve("定时器执行完毕");
+				},1000 * 2);
+			}).then(function(result){
+				//对数据做处理
+				return {
+					"data" : result
+				}
+				
+			}).then(function(data){
+				//接收完整的数据
+				console.log(data);
+				console.timeEnd('Promise')
+			});
+		</script>
+	</body>
+</html>

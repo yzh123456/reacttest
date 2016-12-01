@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>购物车效果</title>
+		<link rel="stylesheet" href="main.css" />
+		<script src="../lib/angular.min.1.5.js"></script>
+	</head>
+	<body>
+		<div ng-app="MyApp">
+			<div ng-controller="shop-list">
+				<!--商品分类-->
+				<div class="class-list clearfix">
+					<label class="item" ng-repeat="(key,item) in data">
+				       {{ item.name }}
+				       <input type="radio" ng-model="curItemKey.id" ng-value="key" name="favorite">
+				    </label>
+				</div>
+				
+				
+				
+				<hr />
+				<p>{{ curItemKey | json}}</p>
+				<hr/>
+				<ul>
+					<li ng-repeat="(id,item) in showDate.childs">
+						<p>{{ item.name }}</p>
+						<p>{{ item.price }}</p>
+						<button ng-click="joinShopCar(id,item)">购买该商品</button>
+						<p>--------------</p>
+					</li>
+				</ul>
+				
+				<hr/>
+				
+				<h1>购物车详细信息</h1>
+				
+				<ul class="select-shop">
+					<li>
+						<label>
+							全选
+							<input type="checkbox" value="" ng-model="selectAll" ng-click="selectAllClick($event)"/>
+						</label>
+						<p>商品名称</p>
+						<p>商品价格</p>
+						<p>购买数量</p>
+					</li>
+					<li ng-repeat="item in carsData">
+						<label>
+							<input type="checkbox" value="" ng-model="item.selectState" name="selectState"/>
+						</label>
+						<p>{{ item.name }}</p>
+						<p>{{ item.price }}</p>
+						<p>{{ item.count }}</p>
+					</li>
+					<li>
+						<p>
+							<span>总数量: {{ carsData | countSum }}</span>
+							<span>总价格: {{ carsData | priceSum}}</span>
+						</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<script>
+			var app = angular.module("MyApp",[]);
+			//求商品数量的和
+			app.filter('countSum',function(){
+				function sum(carsData){
+					var count = 0;
+					for(var key in carsData){
+						var item = carsData[key];
+						//判断选中商品
+						if(item.selectState){
+							count += item.count;
+						}
+					}
+					return count;
+				}
+				
+				return sum;
+			});
+			//求商品的总价
+			app.filter('priceSum',function(){
+				function sum(carsData){
+					var price = 0;
+					for(var key in carsData){
+						var item = carsData[key];
+						//判断选中商品
+						if(item.selectState){
+							price += item.count * item.price;
+						}
+					}
+					return price;
+				}
+				
+				return sum;
+			});
+			app.controller("shop-list",[
+				"$scope","$http",
+				function($scope,$http){
+					//默认值
+					$scope.curItemKey = {}; //用来控制选中的某一个商品分类
+					
+					$scope.data = {};  //所有商品的数据
+					
+					$scope.showDate = {}; //存放显示商品的的列表数据 
+					
+					$scope.carsData = {};  //存放加入到购物车的商品信息
+					
+					$scope.selectAll = false; //全选状态
+					
+					// 发起请求，获取 json 数据
+					$http.get("./data.json")
+						.then(function(response){
+							$scope.data = response.data;
+							//默认选中第一个分类的商品
+							$scope.curItemKey = {
+								//获取第一个分类的 id
+								"id" : Object.keys($scope.data)[0]
+							}
+						});
+					
+					
+
+					//监听当前控制器下的数据的变化
+					$scope.$watch('curItemKey',function(newValue,oldValue){
+						$scope.showDate = $scope.data[newValue.id];
+					},true);
+					
+					// 点击商品的购买按钮
+					$scope.joinShopCar = function(id,item){
+						//向购物车中添加一个商品信息	
+						//处理 count 存在的引用关系，使用深拷贝一个对象的值来处理这个 bug
+						var shopInfo = Object.assign({},item);
+						
+						//默认选中商品
+						shopInfo.selectState = false;
+						
+						shopInfo.count = 1; //默认购买商品数量
+						if(id in $scope.carsData){
+							$scope.carsData[id].count += shopInfo.count;
+						}else{
+							$scope.carsData[id] = shopInfo;
+						}
+						
+					};
+					
+					//全选状态
+					$scope.selectAllClick = function(e){
+						for(var key in $scope.carsData){
+							$scope.carsData[key].selectState = $scope.selectAll;
+						}
+					}
+					
+					//监听全选状态
+					$scope.$watch('carsData',function(newData){
+						var status = true; //假设所有的商品都是选中状态
+						var count = 0;
+						for(var key in $scope.carsData){
+							count++;
+							//如果其中一个商品为 false
+							if(!$scope.carsData[key].selectState){
+								status = false;
+								break;
+							}
+						}
+						if(count == 0){
+							status = false;
+						}
+						//设置全选状态为 false
+						$scope.selectAll = status;
+					},true);
+			}])
+		</script>
+	</body>
+</html>

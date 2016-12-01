@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/html">
+			fetch("../day2/data.json")
+				.then(function(response){
+					// json 返回的是一个 类似 promise 对象
+					// 无法直接返回结果
+					return response.json()
+				})
+				.then(function(data){
+					console.log(data);
+				});
+		</script>
+		
+		<script type="text/html">
+			fetch("../day2/data.json")
+				.then(function(response){
+					// json 返回的是一个 类似 promise 对象
+					// 无法直接返回结果
+					return response.text()
+				})
+				.then(function(data){
+					console.log(data);
+				});
+		</script>
+	
+		<script type="text/html">
+			fetch("../day2/iphone.jpg")
+				.then(function(response){
+					return response.blob()
+				})
+				.then(function(stories){
+					var objectURL = URL.createObjectURL(stories);
+					var img = document.createElement("img");
+					img.src = objectURL;
+					document.querySelector("body").appendChild(img);
+				});
+		</script>
+		
+		<script>
+			fetch("../day2/data.json?",{
+				"headers" : {
+					 "Content-Type": "text/plain"
+				},
+				"method" : "POST",
+				"body" : "a=1&b=2"
+			})
+				.then(function(response){
+					
+				}).catch(function(error){
+					console.log(error);
+				});
+				
+		</script>
+	</body>
+</html>

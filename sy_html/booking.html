@@ -1,0 +1,509 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title></title>
+		<link href="./css/amap.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+	<!--ajax-->
+	<img id="progressImgage" class="progress hide" alt="" src="image/ajax-loader.gif"/>
+	<div id="maskOfProgressImage" class="mask" style="display:none;"></div>
+	<!--弹出框信息-->
+	<div id="poptip" style="display:none;"></div>
+	<!--支付预订费-->
+	<section id="orderpay" style="float: left;overflow:hidden;display:none;">
+		<article class="pay_details" >
+			<p>预订费</p>
+			<h1>
+				¥<label id="bookByIdFee"></label>
+			</h1>
+			<section style="height:60px;margin-bottom:10px">
+				<dl>
+					<dt>车牌号</dt>
+					<dd>
+						<label id="bookingCarNo"></label>
+					</dd>
+				</dl>
+				<dl>
+					<dt>预订停车场</dt>
+					<dd>
+						<label id="bookByIdPark"></label>
+					</dd>
+				</dl>
+				<dl>
+					<dt>剩余空车位</dt>
+					<dd>
+						<label id="bookByIdBerth"></label>
+					</dd>
+				</dl>
+				<dl>
+					<dt>地址</dt>
+					<dd>
+						<label id="bookByIdAddress"></label>
+					</dd>
+				</dl>			
+			</section>
+		</article>
+		<article>
+			<div id="bookingSelectCar">
+				车辆选择
+				<label id="bookingCarNo2"></label>
+			</div>
+			<ul id="bookingSelectList" style="display:none;"></ul>
+		</article>
+		<article id="scanpage">
+			<button type="button" id="btn_payBooking" class="btn_pay" onClick="PayOrder();">立即支付</button>
+			<p style="padding:0px 10px;text-align:left;">请在<span id="overdue_time">5</span>分钟内完成支付，否则订单失效。缴费成功后车位将为你保留<span id="orderOverTime">30</span>分钟，请在规定时间内入场。预订车位成功后不能取消。</p>
+		</article>
+	</section>
+	<!--预订失败-->
+	<section id="bookingfail" style="display:none;">
+		<article class="bf_details">
+			<p id ="bookFailMsg"></p>
+		</article>
+		<article class="fp_list">
+			<nav>				
+				<ul id="fp_parkList"></ul>
+			</nav>
+		</article>		
+	</section>
+	<!--返回按钮-->
+	<div class="icon_return" id="icon_return" style="display:none;"></div>
+	<script src="./js/jquery-1.8.2.min.js"></script>
+	<script src="js/base.js"></script>
+	<script>
+		var lat = localStorage.getItem("lat") || "";
+		var lng = localStorage.getItem("lng") || "";
+		//消息提示
+		var poptip = function(mess) {
+			$("#poptip").html(mess);
+			$("#poptip").fadeIn(400, function() {
+				setTimeout(function() {
+					$("#poptip").fadeOut('slow');
+				}, 1200);
+			});
+		};
+		if(lat == "" || lat == null || lng == "" || lng == null){
+			poptip("定位失败，请刷新页面重新定位");
+			//setTimeout('detailGoBack()',1000);
+		}
+
+		var HOSTPATH = window.location.href.split('jspsn')[0]+'jspsn/parkApp/';
+		var QUERY_BOOK = HOSTPATH + 'queryBookingInfo.servlet'; //查询预订订单信息
+		var PAY_CARD_URL = HOSTPATH + 'queryVehicleList.servlet'; //查询车辆列表
+		var SEARCH_PARK_POSITION = HOSTPATH + 'queryParkByPosition.servlet';
+		var PARKDETAIL = HOSTPATH + 'queryParkInfo.servlet'; //查询停车场详情
+		var unionid = jspsnQueryOpen();
+		var pay_url = "";  //支付url
+		var ADD_BOOK = HOSTPATH + 'addBooking.servlet';  //预订
+		
+		var statusParks = localStorage.getItem("statusParks");
+		var parkId = sessionStorage.getItem("parkId");
+		if(sessionStorage.getItem("parkClicked")){
+			var parkClicked = sessionStorage.getItem("parkClicked");
+			var parkClickedSession = parkClicked.split(",");
+		}
+		if(sessionStorage.getItem("oldBookId")){
+			var oldBookId = sessionStorage.getItem("oldBookId");
+		}
+		var vehicle_no = localStorage.getItem("vehicleNo");
+		var flagBookPay = sessionStorage.getItem("flagBookPay");
+		if(flagBookPay == "false"){
+			flagBookPay = false;
+		}else if (flagBookPay == "true") {
+			flagBookPay = true;
+		};
+		localStorage.removeItem("statusParks");
+		
+		//获取支付url
+		$.ajax({
+			url : HOSTPATH + "url.servlet?type=WX",
+			cache : false,
+			dataType : 'text',
+			type:'post',
+			success : function(data) {
+				pay_url = data;
+			}
+		});
+		
+		//返回上级
+		function detailGoBack(){
+			var host = window.location.href.split("sy_html")[0];
+			window.location.href = host + "sy_html/map.html";
+			window.event.returnValue = false;
+		}
+
+		//ajax
+		var $ajax = function(options) {
+			var img = $("#progressImgage");
+			var mask = $("#maskOfProgressImage");
+			var complete = options.complete;
+			options.complete = function(httpRequest, status) {
+				img.hide();
+				mask.hide();
+				if (complete) {
+					complete(httpRequest, status);
+				}
+			};
+			options.async = true;
+			img.show().css({
+				"position": "fixed",
+				"top": "50%",
+				"left": "50%",
+				"margin-top": function() {
+					return -1 * img.height() / 2;
+				},
+				"margin-left": function() {
+					return -1 * img.width() / 2;
+				}
+			});
+			mask.show().css("opacity", "0.1");
+			$.ajax(options);
+		};
+		
+		//查询自己名下的车牌
+		function bookingSelectCar(){
+			if($("#bookingSelectList").html() != ''){
+				$('#bookingSelectList').show();
+				return;
+			}
+			$ajax({
+				url:PAY_CARD_URL,
+				cache: false,
+				data: {unionid:unionid},
+				dataType: 'json',
+				success: function(data) {
+					if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+						for(var k in data.dataItems){
+							var vehicleNo = data.dataItems[k].attributes.vehicleNo;
+							var tp = $('<li><label class="bookingCarNo" for="bookingCarList'+k+'"></label><input type="radio" class="bookingCarIcon" id="bookingCarList'+k+'"/></li>');					
+							tp.find('.bookingCarNo').html(vehicleNo);
+							$('#bookingSelectList').append(tp);
+							if($("#bookingCarNo2").text() && $("#bookingCarNo2").text() == vehicleNo){
+								tp.find(".bookingCarIcon").attr("checked",true);
+							}
+						}
+						if(!$("#bookingCarNo2").text()){
+							$("#bookingSelectList li:first-of-type").find(".bookingCarIcon").attr("checked",true);
+						}
+						$('#bookingSelectList').append($("<div class='clear'></div>"));
+						$("#bookingCarNo,#bookingCarNo2").text(data.dataItems[0].attributes.vehicleNo);
+					}else{
+						$("#bookingCarNo2").html("目前还没有车辆供选择").css("color","#959595");
+						$(".pay_details section").css("height","40px").find("dl:first-of-type").hide();
+					}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {				
+					$(".pay_details section").css("height","40px").find("dl:first-of-type").hide();
+					poptip('车牌查询失败，请重试');
+				}
+			});
+		}
+		
+		//立即预订-按钮触发
+		function PayOrder(){
+			var obj = new Object();
+			var vehicleNo = $("#bookingCarNo2").html(); //车牌号
+			obj.unionid = unionid; //用户id
+			obj.parkid = parkId; //停车场id
+			obj.vehicle_no = vehicleNo;
+			obj.amount = amount;
+			obj.isdelay = 0;
+			obj.oldbook_id = '';
+			if(!$("#bookingCarNo").text()){
+				poptip('请先选择车牌');
+				return;
+			}
+			$ajax({
+				url: ADD_BOOK,
+				cache: false,
+				data: obj,
+				timeout: 10000,
+				dataType: 'json',
+				type: 'post',
+				success: function(data) {
+					if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+						localStorage.setItem('vehicleNo',vehicleNo);
+						$("#btn_payBooking").css({"disabled":"true","background-color":"#999"}).attr("onclick","");
+						window.location.href = pay_url+data.dataItems[0].attributes.orderno;
+						window.event.returnValue = false;
+					}else if (data.resultCode == "2") {
+						poptip('该车辆已预订');
+					}else{
+						poptip(data.message);
+					} 
+				},
+				error: function(textStatus) {
+					if('timeout' == textStatus){
+						poptip('请求超时');
+					}
+				}
+			});
+		}
+		
+		//延长预订-按钮触发
+		function delayPayOrder(){
+			window.location.href = pay_url + orderNo;
+			window.event.returnValue = false;
+		}
+
+		var amount;
+		//获取预订停车场信息
+		function getBookingOrderTime(){
+			var obj = new Object();
+			obj.parkid = parkId;
+			$ajax({
+				url: QUERY_BOOK,
+				cache: false,
+				data: obj,
+				dataType: 'json',
+				type: 'post',
+				success: function(data) {
+					if(data && data.dataItems.length>0){
+						amount = data.dataItems[0].attributes.amount;
+						$("#orderOverTime").html(data.dataItems[0].attributes.book_time);
+						$("#overdue_time").html(data.dataItems[0].attributes.overdue_time);	
+					}else{
+						poptip(data.message);
+						setTimeout(function(){
+							window.history.back(-1);
+						},2500)
+					}
+				}
+			});
+		};
+		
+		
+		//查询附近停车场
+		var queryParkList = function(dataMsg) {
+			var obj = new Object();
+			obj.unionid = unionid;
+			if(dataMsg instanceof Array){
+				obj.longitude = dataMsg[3];
+				obj.latitude = dataMsg[4];
+				obj.beforelongitude = dataMsg[3];
+				obj.beforelatitude = dataMsg[4];
+			}else{
+				obj.longitude = dataMsg.longitude;
+				obj.latitude = dataMsg.latitude;
+				obj.beforelongitude = dataMsg.longitude;
+				obj.beforelatitude = dataMsg.latitude;
+			}
+			//obj.canton = city;
+			obj.synch_signal = new Date().getTime() + '';
+			//obj.name = $('#searchParkName').val();停车场名称。
+			$ajax({
+				url: SEARCH_PARK_POSITION,
+				cache: false,
+				data: obj,
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+						var flag = false;
+						$('#fp_parkList').empty();
+						for (var i = 0; i < data.dataItems.length; i++) {
+							var tmp = data.dataItems[i].attributes;
+							if (tmp.emptyParkPlaceCount > 0) {
+								flag = true;
+								var tp = $('<li>'
+											+'<h4><em class="fp_name"></em>&nbsp;&nbsp;<span id="fp_distance"></span>m</h4>'
+											+'<p><em id="fp_address"></em><span>&nbsp;&nbsp;<em id="fp_price"></em>元/小时</span></p>'
+											+'<p><em class="fp_num fp_num_3" id="fp_beds"></em>/<em id="fp_total_beds"></em></p>'
+											+'<div class="goto" onclick="bookParkOther(this);">去预订</div>'
+											+'</li>');
+								tp.attr('data-key', tmp.longitude + ',' + tmp.latitude + ',' + tmp.name);
+								tp.find(".fp_name").html(tmp.name).attr("id",tmp.id);
+								tp.find("#fp_distance").html(tmp.distance.toFixed(2)).removeAttr('id');
+								tp.find("#fp_address").html(tmp.address).removeAttr('id');
+								tp.find("#fp_price").html(tmp.park_qh).removeAttr('id');
+								tp.find("#fp_beds").html(tmp.emptyParkPlaceCount).removeAttr('id');
+								tp.find("#fp_total_beds").html(tmp.parkPlaceCount).removeAttr('id');
+								$("#fp_parkList").append(tp);
+							}
+						}
+						flag ? ($('#bookFailMsg').html('对不起，您预订的' + ((dataMsg instanceof Array)?dataMsg[0]:dataMsg.name) + '车位预订失败，系统自动为您推荐以下停车场。')) : ($('#bookFailMsg').html('对不起，您预订的' + dataMsg.name + '的车位已满，预订失败，附近暂时没有可以推荐的停车场，请返回主页，选择其他停车场'));
+						$("#icon_return").show().attr("onClick","detailGoBack()");
+					}
+				}
+			});
+		};
+		
+		//预订失败后，预订其它停车场
+		function bookParkOther(obj){
+			parkId = $(obj).siblings("h4").find(".fp_name").attr("id");
+			bookPark();
+		}
+
+		//查询停车场详情获取空车位数。
+		function queryParkEmpty(emptyNum){
+			var obj = new Object();
+			obj.id = parkId;
+			obj.unionid = unionid;
+			obj.beforelongitude = lng;
+			obj.beforelatitude = lat;
+			$ajax({
+				url: PARKDETAIL,
+				cache: false,
+				data: obj,
+				dataType: 'json',
+				type: 'post',
+				success: function(data) {
+					if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+						var tmp = data.dataItems[0].attributes;
+						if(tmp.emptyParkPlaceCount < 1){
+							poptip('车位数不足，不能预订');
+							return;
+						}
+						if(emptyNum == 0){  //预订
+							booking();
+						}else{  //延长预订
+							delayBook(tmp);
+						}
+					}
+				}
+			});
+		}
+			
+		
+		//预订
+		function bookPark(){
+			queryParkEmpty(0); //查询空车位数
+		}
+
+		//加载预订订单
+		var booking = function(){
+			var obj = new Object();
+			obj.parkid = parkId;
+			obj.vehicle_no = vehicle_no;
+			obj.isdelay = 0;
+			obj.oldbook_id = '';
+			$ajax({
+				url: QUERY_BOOK,
+				cache: false,
+				data: obj,
+				dataType: 'json',
+				type: 'post',
+				success: function(data){
+					if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+						$(".mask").hide();
+						$('#orderpay').show();
+						$('#bookingfail').hide();
+						$("#bookingSelectList").hide();
+						$("#bookingSelectCar").show();
+						amount = data.dataItems[0].attributes.amount;
+						$('#bookByIdFee').html(data.dataItems[0].attributes.amount.toFixed(2));
+						$('#bookByIdPark').html(parkClickedSession[0]);
+						$('#bookByIdBerth').html(parkClickedSession[1]);
+						$('#bookByIdAddress').html(parkClickedSession[2]);
+						$("#btn_payBooking").attr("onclick","PayOrder();");
+						$("#orderOverTime").html(data.dataItems[0].attributes.book_time);
+						$("#overdue_time").html(data.dataItems[0].attributes.overdue_time);
+						bookingSelectCar();
+						$("#orderpay").show();
+					} //预订失败 
+					else{
+						$('#orderpay').hide();
+						$('#bookingfail').show();
+						queryParkList(parkClickedSession);
+					}
+				}
+			});
+		}
+		
+		
+		//加载延长预订订单
+		var delayBook = function(_data) {
+			var delay_obj = new Object();
+			delay_obj.parkid = parkId;
+			delay_obj.unionid = unionid;
+			delay_obj.vehicle_no = vehicle_no;
+			delay_obj.amount = amount;
+			delay_obj.oldbook_id = oldBookId;
+			delay_obj.isdelay = 1;
+			$ajax({
+				url: ADD_BOOK,
+				cache: false,
+				data: delay_obj,
+				timeout: 10000,
+				dataType: 'json',
+				type: 'post',
+				success: function(data) {
+					if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+						amount = data.dataItems[0].attributes.amount;
+						$("#bookingSelectList").hide();
+						$('#bookByIdFee').html(data.dataItems[0].attributes.amount);
+						$('#bookByIdPark').html(_data.name);
+						$('#bookByIdBerth').html(_data.emptyParkPlaceCount);
+						$('#bookByIdAddress').html(_data.address);
+						orderNo = data.dataItems[0].attributes.orderno;
+						$("#bookingSelectCar").hide();
+						$("#btn_payBooking").attr("onclick","delayPayOrder();");
+						$("#bookingCarNo2,#bookingCarNo").html(vehicle_no);
+						localStorage.removeItem('vehicleNo');
+						$("#orderpay").show();
+					} //预订失败 
+					else if (data.resultCode == "1") {
+						$('#orderpay').hide();
+						$("#bookingfail").show();
+						$("#bookFailMsg").html(data.message).css("text-align","center");
+					}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					if('timeout' == textStatus){
+						poptip('请求超时');
+					}
+				}
+			});
+		};
+	
+		//延长预订
+		var orderNo;  //延长预订订单号
+		function DelayPayBookPark() {
+			queryParkEmpty(1); //查询空车位数
+		}
+		
+		//初始化
+		$(function(){
+			getBookingOrderTime();
+
+			if (oldBookId && flagBookPay) { //延长预订
+				$("#btn_payBooking").attr("onclick","DelayPayBookPark()");
+				DelayPayBookPark();
+			} else {  //预订
+				$("#btn_payBooking").attr("onclick","PayOrder()");
+				bookPark();
+			}
+			
+			//打开车辆列表
+			$("#bookingSelectCar").click(function(){
+				if($("#bookingSelectList").html() != ''){
+					$("#bookingSelectList").show();
+				}else{
+					poptip('目前没有查询到可供选择的车辆信息，请重试');
+				}
+			});
+			
+			//预订切换选择车辆
+			var moveEvent = false;
+			$('#bookingSelectList li').live("touchmove", function() {
+				moveEvent = true;
+			});
+			$('#bookingSelectList li').live("touchend", function() {
+				if(moveEvent == true){
+					moveEvent = false;
+					return false;
+				}
+				$(this).find(".bookingCarIcon").attr("checked",true);
+				$(this).siblings().find(".bookingCarIcon").attr("checked",false);
+				var CarNo = $(this).find(".bookingCarNo").text();
+				$("#bookingCarNo,#bookingCarNo2").text(CarNo);
+				$("#bookingSelectList").hide();
+				$(".mask").hide();
+			});
+		});
+	</script>
+	</body>
+</html>

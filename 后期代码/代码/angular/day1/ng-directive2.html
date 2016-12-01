@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>指令</title>
+	<script src="../lib/angular.min.1.5.js"></script>
+</head>
+<body>
+	
+<div ng-app="myApp">
+	<div ng-controller="myCon" ng-init="text='hello angular.js'">
+		
+		<div ng-show="state">
+			表达式为 : {{ state }} - <p ng-bind="text"></p>
+		</div>
+		<!-- angular 没有 ng-else 指令，但是我们可以让表达式为 false 时使用 ! 转换为 true 的情况 -->
+		<div ng-show="!state">
+			表达式为 : {{ state }} - 显示默认数据
+		</div>
+		
+		<button ng-click="click(true)">显示</button> 
+		<button ng-click="click(false)">隐藏</button>
+	</div>
+</div>
+
+<script>
+	// 一个页面只允许有一个 app
+	var app = angular.module('myApp', []); //创建一个 module 对象
+	//绑定一个控制器
+	// 注入服务
+	// $scope 是一个服务 表示当前控制器
+	app.controller('myCon', ['$scope',function($scope) {
+		//添加一个方法
+		$scope.click = function(state){
+			$scope.state = state;
+		}
+	}]);
+</script>
+
+</body>
+</html>

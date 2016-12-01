@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>angular</title>
+	<script src="../lib/angular.min.1.5.js"></script>
+</head>
+<body>
+	
+<div ng-app="myApp">
+	<div ng-controller="myCon">
+		<pre>{{ list | json }}</pre>
+	</div>
+</div>
+
+<script>
+	// 一个页面只允许有一个 app
+	var app = angular.module('myApp', []); //创建一个 module 对象
+	//绑定一个控制器
+	// 注入服务
+	// $scope 是一个服务 表示当前控制器
+	app.controller('myCon', ['$scope','$http',function($scope,$http) {
+		//请求不成功 不会进入到 第一个 then 方法里面
+		$http({
+			"url" : "./test.json"
+		}).then(function(response){
+			console.log(response);
+			//获取请求到的json数据
+			var data = response.data;
+			//返回 json 数据下的一个数据
+			return data.list;
+		}).then(function(result){
+			//修改控制器下的数据
+			$scope.list = result;
+		});
+	}]);
+</script>
+
+</body>
+</html>

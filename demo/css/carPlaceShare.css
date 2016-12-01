@@ -1,0 +1,672 @@
+html,.share_main,h4{
+    margin:0;padding:0;
+	font-size: 15px;
+	height:100%;
+	background-color: #F5F5F5;
+	-webkit-tap-highlight-color:transparent;
+	cursor:pointer;
+}
+.hide{
+	display: none;
+}
+.share_main .head_titel{
+    font-size:17px;
+    display: table-cell;
+          vertical-align: middle;
+	font-weight: 700;
+}
+.share_main .search_share{
+	padding-top: 10px;
+	line-height: 30px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    background-color: #fff;
+    z-index: 1111;
+}
+.share_main img{	    
+	float: right;
+	width: 10%;
+	margin-right: 4%;
+}
+.share_main .input_search_share{
+    width: 92%;
+    margin-left: 10px;
+    height: 30px;
+    padding-left: 2%;
+    border:1px solid #c6c6c6;
+    border-radius: 0;
+}
+.input_search_share nav {
+    width: 96%;
+    min-height: 20px;
+    max-height: 100%;
+    position: fixed;
+    top: 45px;
+    left: 0;
+    z-index: 99;
+    margin: 10px;
+    background:#F5F5F5;
+}
+.share_main .search_record{
+    padding-left: 0;
+    width: 67.5%;
+    height: auto;
+    position: absolute;
+    z-index: 2;
+    border:0;
+}
+#searchrecords li {
+    min-width: 10px;
+    height: 20px;
+    background-color: #E3E3E3;
+    line-height: 20px;
+    margin: 5px 5px;
+    padding: 5px 10px;
+    list-style-type: none;
+    float:left;
+}
+#searchrecords span {
+    float: right;
+    margin-right: 3%;
+}
+
+/* .share_main .search_record li{
+    list-style-type: none;
+    padding: 0 0 0 2%;
+    margin: 0;
+    border-bottom: 1px solid #c6c6c6;
+    background-color: #FFFFFF;
+    width: 98%;
+} */
+.share_main .periphery{
+    padding: 10px;
+    border-bottom: 1px solid #c6c6c6;
+    border-top: 1px solid #c6c6c6;
+    margin-top: 10px;
+    background-color: #ffffff;
+}
+.share_main .periphery_title {
+    margin-bottom: -10px;
+    border-bottom: 0;
+    
+}
+.share_main .overplus_share_count{
+    color: #18B4ED;
+}
+.share_main .park_name{
+    margin-bottom: 5px;
+	color:#222222;
+	float:left;
+	width:70%;
+}
+.share_main .park_addr{
+    color:#959595;
+	font-size: 13px;
+	float: left;
+	width:70%;
+	margin-bottom: 5px;
+}
+.share_main .park_far{
+    color:#959595;
+	font-size: 13px;
+	float: right;
+}
+.share_main .park_time{
+    color:#959595;
+	font-size: 13px;
+	clear: both;
+    margin-bottom: 5px;
+}
+.share_main .grab{
+    color:#959595;
+	font-size: 13px;
+	position: relative;
+}
+.share_main .grab_price{
+    color: #f54d19;
+    font-size: 17px;
+    padding: 5px;
+    border: 1px dashed rgba(241, 101, 76, 0.88);
+    width: 51%;
+    text-align: center;
+    border-radius: 3px;
+    background-color: #FFF4EE;
+}
+.share_main .grab_price span{
+    font-size: 27px;
+          font-weight: 700;
+}
+.share_main .original_price #saveMoney{
+    color:rgba(241, 101, 76, 0.88);
+}
+.share_main .line-through{
+	text-decoration: line-through;
+}
+.share_main .original_price{
+    margin-top:5px;
+}
+.share_main .bg_grab{
+    position: absolute;
+	background-image: url("../image/button_carShare.png");
+	right: 0;
+	width: 110px;
+	height: 50px;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	bottom: 0;
+	background-position:bottom;
+}
+.share_main .bg_no_grab{
+    position: absolute;
+	background-image: url("../image/button_noCarShare.png");
+	right: 0;
+	width: 110px;
+	height: 50px;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	bottom: 0;
+	background-position:bottom;
+}
+.share_main .search_bg{
+    background: url("../image/icon_search.png") no-repeat center;
+    height: 32px;
+    width: 37px;
+    background-size: 20px;
+    position: absolute;
+    top: 11px;
+    /*background-color: #f3eeee;*/
+    right: 11px;
+}
+.share_main .grab_parking_spaces {
+    max-width: 90px;
+    top: 63px;
+    right: 10px;
+    font-size: 13px;
+    color: #18B4ED;
+    border: 1px solid;
+    text-align: center;
+    margin-left: 5px;
+    border-radius: 3px;
+    padding: 0 5px;
+    float: right;
+}
+.share_main .periphery_share {
+    float: right;
+    color: #18B4ED;
+    font-size: 13px;
+    margin-right: 10px;
+    border: 1px solid;
+    padding: 0 10px;
+    border-radius: 3px;
+}
+
+/**********抢车位记录列表样式*************/
+.history{
+    background-color: #F5F5F5;
+    font-family: 微软雅黑;
+}
+ul{
+    margin:0;padding:0;
+    width: 100%;
+}
+.history li{
+    list-style-type:none;
+	border-bottom: 1px solid #c6c6c6;
+	padding: 0;
+	margin: 0;
+	border-top: 1px solid #c6c6c6;
+	background-color: #FFFFFF;
+	margin-top: 10px;
+}
+.history li > div{
+    position: relative;
+	padding: 3px;
+}
+
+.history_car_no{
+    color:#18B4ED;
+	font-size: 13px;
+	    position: absolute;
+		top: 4px;
+		right: 2%;
+}
+.history_share_name{
+    color:#959595;
+	font-size: 13px;
+}
+.history_price{
+    color:#959595;
+	font-size: 13px;
+    position: absolute;
+	top: 3px;
+	right: 2%;
+}
+.history_validity{
+    color:#959595;
+	font-size: 0.7em;
+	width: 82%;
+}
+.history_status{
+    position: absolute;
+	right: 0;
+	bottom: 0;
+	background-repeat: no-repeat;
+	width: 18%;
+	height: 22px;
+	background-size: 100%;
+	background-position: bottom;
+}
+.history .pic_in_use{
+	background-image: url(./image/pic_in_use.png);
+}
+.history .pic_expire{
+	background-image: url(./image/pic_expire.png);
+}
+.history .pic_wait{
+	background-image: url(./image/pic_wait.png);
+}
+.history .pic_refund{
+	background-image: url(./image/pic_refund.png);
+}
+.history .pic_unrefund{
+	background-image: url(./image/pic_unrefund.png);
+}
+.history .pic_not_used{
+	background-image: url(./image/pic_not_used.png);
+}
+.history .pic_will_expire{
+	background-image: url(./image/pic_will_expire.png);
+}
+.background_bg{
+    background-image: url(./image/smile.png);
+    width: 111px;
+    height: 111px;
+    background-size: 100%;
+    margin: 6% auto;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.has_none{
+    text-align:center;
+    font-size:13px;
+}
+.background_alert{
+    padding: 0 20px 20px;
+    color:#222222;
+}
+/*********** 车位详情  *************/
+.detail{
+    margin:0;padding:0;
+	font-size: 15px;
+    background-color: #F5F5F5;
+    font-family: 微软雅黑;
+}
+.detail .grab_price{
+    color:#f54d19;
+	font-size: 13px;
+	padding: 5px 15px;
+	border: 1px dashed rgba(241, 101, 76, 0.88);
+	text-align: center;
+	float: left;
+	margin-left: 25%;
+    background-color: #FFE8E8;
+    border-radius:3px;
+    min-width:35%;
+}
+.detail .grab_price #grab_price{
+    font-size: 50px;
+    font-weight: 700;
+}
+.detail #parkDetailImagesList{
+	background-image: url(./image/bg_img_parking_default.png);
+	width: 100%;
+	height: 130px;
+	background-size: 100%;
+	overflow: hidden;
+	transition-duration:100ms;
+	transform:translate(0px, 0px) translateZ(0px);
+}
+.detail .park_name{
+    padding: 10px 4%;
+    background-color:#ffffff;
+    margin-top: 130px;
+    width:92%;
+}
+.detail .park_addr{
+    font-size: 13px;
+	color: #959595;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	background-color:#ffffff;
+
+}
+.detail .park_titel{
+    color: #f18340;
+	position: relative;
+	padding:5px;
+	margin-bottom: 5px;
+}
+.detail .share_phone{
+    color:#959595;
+	position: absolute;
+	right: 30px;
+	top: 5px;
+	font-size:13px;
+}
+/* .detail .share_phone_bg{
+	position: absolute;
+	top: 4px;
+	right: 0px;
+	background-image: url(./image/share_phone_bg.png);
+	width: 20px;
+	height: 20px;
+	background-size: 100%;
+} */
+.detail .share_phone_bg {
+    position: absolute;
+    top: 0px;
+    right: -25px;
+    background-image: url(./image/share_phone_bg.png);
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
+}
+.detail .share_phone a{
+	text-decoration: none;
+    color: #959595;
+}
+.detail .place_rule{
+    text-align: center;
+	font-size: 13px;
+	padding: 10px 0;
+	clear:both;
+}
+.detail .park_rule{
+    text-align: center;
+	font-size: 13px;
+	padding-bottom: 10px;
+}
+.detail .park_rule a{
+    color:#18B4ED;
+}
+.detail .select_car{
+    color:#959595;
+}
+.detail .select_car_content{
+	float:left;
+	width:100%;
+	border-bottom: 1px solid #c6c6c6;
+	background-color:#ffffff;
+    max-height: 100px;
+    overflow: auto;
+}
+.detail .select_car_content div{
+	float: left;
+	width: 23%;
+	padding: 3%;
+	margin-left: 3%;
+	text-align: center;
+	border: 1px solid #c6c6c6;
+	font-size: 13px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+.detail .select_car_content .only_car_no{
+	float: none;
+	margin: 10px auto 10px;
+}
+.detail .select_car_titel{
+	padding: 8px;
+	font-size: 13px;
+	border-bottom: 1px solid #c6c6c6;
+	background-color:#ffffff;
+	margin-top: 10px;
+    border-top: 1px solid #c6c6c6;
+}
+.detail .share_content{
+    padding:10px;
+	border-bottom: 1px solid #c6c6c6;
+	border-top: 1px solid #c6c6c6;
+	color:#959595;
+	background-color:#ffffff;
+}
+.detail .select_car .active{
+    background-color:#18B4ED;
+	color:#ffffff;
+    border-radius: 3px;
+}
+.detail .share_price .save_money{
+	float: left;
+	margin-top: 40px;
+	font-size: 13px;
+	margin-left: 2%;
+}
+.detail .share_status{
+    height: 110px;
+	width: 140px;
+	position: absolute;
+	top: 130px;
+	right: 30%;
+	background-size: 100%;
+	background-repeat: no-repeat;
+}
+.detail .pic_seal_in_use{
+	background-image: url(./image/pic_seal_in_use.png);
+}
+.detail .pic_seal_expire{
+	background-image: url(./image/pic_seal_expire.png);
+}
+.detail .pic_seal_wait{
+	background-image: url(./image/pic_seal_wait.png);
+}
+.detail .pic_seal_refund{
+	background-image: url(./image/pic_seal_refund.png);
+}
+.detail .pic_seal_unrefund{
+	background-image: url(./image/pic_seal_unrefund.png);
+}
+.detail .pic_seal_noused{
+	background-image: url(./image/pic_seal_not_used.png);
+	top: 130px;
+	right:0;
+	height: 35px;
+    width: 75px;
+    position: absolute;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    right: 0;
+}
+.detail .pic_seal_will_expire{
+	background-image: url(./image/pic_seal_will_expire.png);
+}
+.detail .has_no_splace_bg{
+	background-image: url(./image/smile.png);
+    height: 100px;
+    width: 100px;
+    margin-left: 35%;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.detail .has_no_splace_font{
+	text-align:center;
+	margin-bottom: 10px;
+}
+.detail .refund{
+    position: fixed;
+    bottom: 10px;
+    right: 30px;
+    color: #18B4ED;
+}
+.zhegai {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 5;
+	background-color: #000000;
+	opacity: 0.4;
+}
+.hide{
+    display:none;
+}
+.message_detail{
+    width: 80%;
+    position: fixed;
+    top: 25%;
+    left: 9%;
+    border: 1px solid #c6c6c6;
+    background-color: #ffffff;
+    z-index: 11;
+    border-radius: 4px;
+    min-height: 100px;
+    padding: 5px 10px;
+    max-height: 50%;
+    color:#959595;
+    overflow: auto;
+    font-size: 13px;
+}
+.message_detail_titel{
+    color: #222222;
+	margin: 15px 0 5px 0;
+	font-size:15px;
+}
+.has_no_car{
+    text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid #c6c6c6;
+    color: #222222;
+    background-color:#ffffff;
+    font-size:13px;
+}
+.has_no_car a{
+	color:#18B4ED;
+}
+.share_order_detail_refund{
+	width: 80%;
+    position: absolute;
+    top: 40%;
+    left: 9%;
+    border: 1px solid #c6c6c6;
+    background-color: #ffffff;
+    z-index: 11;
+    border-radius: 4px;
+    min-height: 100px;
+    padding: 5px;
+    max-height: 50%;
+    color: #959595;
+    overflow: auto;
+    font-size: 13px;
+    text-align: center;
+}
+.share_order_detail_refund p{
+	font-size: 15px;
+    color: #222222;
+}
+.share_order_detail_refund span{
+    color: #f18340;
+}
+.share_order_detail_refund .buttom_left{
+    height: 40px;
+    width: 40%;
+    float: left;
+    line-height: 40px;
+    background-color: #999999;
+    margin: 24px 4% 10px 6%;
+    color:#ffffff;
+}
+.share_order_detail_refund .buttom_right{
+    height: 40px;
+    width: 40%;
+    float: left;
+    line-height: 40px;
+    background-color: #18B4ED;
+    margin: 25px 6% 10px 4%;
+    color:#ffffff;
+}
+.refund_reason{
+    color: #CC2018;
+    padding: 15px;
+    font-size: 13px;
+    margin-bottom: 30px;
+    float: left;
+}
+.go_to_pay{
+    background-color: #18B4ED;
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    float: left;
+    width: 80%;
+    margin-left: 6%;
+    color:#ffffff;
+}
+#poptip {
+	position: fixed;
+	top: 50%;
+	left: 0;
+	left: 10%;
+	right: 0;
+	width: 70%;
+	font-size: 12px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	
+	padding: 0.5em 5%;
+	line-height: 3em;
+	color: #fff;
+	border-radius: 3px;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+	z-index: 99999;
+}
+.slides{
+	position:relative;
+	display:block;
+	height:130px;
+	list-style:none;
+	margin:0;
+	padding:0;
+	float:left;
+}
+.slides li{
+	position:absolute;
+	display:block;
+	height:130px;
+	list-style:none;
+	margin:0;
+	padding:0;
+	float:left;
+}
+.slides li img{
+	width:100%;
+	height:100%;
+	text-indent:-9999px;
+}
+#parkingdetails,#showParkDetailImage{
+	width:100%;
+	position:absolute;
+	top:0;
+	z-index:1;
+	
+}
+.pd_hdp{
+	position:relative;
+	width:100%;
+	height:100%;
+	background:url(./image/bg_img_parking_default.png) no-repeat center top / auto 100%;
+	background-size:100%;
+}
+#showParkDetailImage img{
+	background:#ffffff;
+}
+.share_content_list>.periphery:last-child{
+	margin-bottom:10px;
+}
+.share_content_list .periphery:first-child{
+	margin-top:98px;
+	border-top:0px;
+}

@@ -1,0 +1,2076 @@
+html,body,div,h1,h2,h3,h4,h5,h6,ul,ol,dl,li,dt,dd,blockquote,pre,form,fieldset,table,th,td,span,p,input,button {
+margin:0;
+padding:0;
+}
+
+body {
+	width:100%;
+	height:100%;
+	background-color:#EEE;
+	color:#545454;
+	font-size:14px;
+	line-height:20px;
+	margin:0;
+	-webkit-text-size-adjust: 100%!important;
+	cursor: pointer;
+}
+
+#go_to_parking{
+    float: right;
+    padding-left: 30px;
+    background: transparent url(../image/icon_goto_parking14.png) no-repeat scroll 0 0 / 30% 100%;
+    color: #00afd1!important;
+    font-weight: 400;
+    white-space: nowrap;
+    margin-top: -20px;
+}
+
+li {
+list-style-type:none;
+}
+
+h2 {
+font-size:1.4rem;
+}
+
+h3 {
+font-size:1.2rem;
+}
+
+h4 {
+font-size:1.1rem;
+}
+
+em {
+font-style:normal;
+}
+
+input,button {
+border:0;
+outline:none;
+}
+
+a {
+color:#545454;
+text-decoration:none;
+}
+
+#mapContainer {
+position:absolute;
+top:0;
+right:0;
+bottom:0;
+left:0;
+}
+
+/*div.info-top {
+position:relative;
+border-bottom:1px solid #CCC;
+border-radius:5px 5px 0 0;
+background:none repeat scroll 0 0 #F9F9F9;
+}
+
+div.info-top div {
+display:inline-block;
+color:#333;
+font-weight:700;
+font-size:14px;
+line-height:31px;
+padding:0 10px;
+}
+
+div.info-top img {
+position:absolute;
+top:10px;
+right:10px;
+transition-duration:.25s;
+}
+
+div.info-top img:hover {
+box-shadow:0 0 5px #000;
+}
+
+div.info-middle {
+border-radius:0 0 8px 8px / 0 0 8px 8px;
+font-size:10px;
+line-height:21px;
+padding:10px;
+}
+
+div.info-bottom {
+clear:both;
+width:100%;
+height:0;
+text-align:center;
+}
+
+div.info-bottom img {
+position:relative;
+z-index:104;
+}
+*/
+.amap-logo {
+z-index:1;
+}
+
+.icon_return {
+position:fixed;
+bottom:60px;
+left:10px;
+width:40px;
+height:40px;
+border:0 none;
+border-radius:3px;
+background:#8E8D8A url(../image/icon_return.png) no-repeat scroll center center / 32px 32px;
+opacity:0.9;
+display: none;
+z-index:99;
+}
+
+section#homepage,section#searchpage,section#bookinglist,section#orderpay,section#parkingdetails,section#searchList,section#focusonlist,section#showParkDetailImage{
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	z-index: 1;
+	background: #FFF;
+}
+
+section#homepage{
+	z-index:10;
+}
+
+#tip {
+	position:absolute;
+	bottom:20px;
+	background-color:#FFF;
+	line-height:20px;
+	padding:0 2%;
+	right:10px;
+	left:10px;
+	width:90%;
+	width:calc(96% - 20px);
+	width:-moz-calc(96% - 20px);
+	width:-webkit-calc(96% - 20px);
+	width:-ms-calc(96% - 20px);
+}
+
+#tip>div:first-child {
+overflow:auto;
+max-height:150px;
+}
+
+#tip .btn_showlocat {
+height:30px;
+outline:none;
+border:0;
+border-radius:3px;
+background-color:#0D9BF2;
+color:#fff;
+text-align:center;
+font-size:12px;
+line-height:30px;
+margin:10px;
+}
+#searchList_ul{
+ background-color: #ccc;
+}
+#info {
+margin-top:5px;
+}
+
+#homepage .tip_map {
+position:fixed;
+width:40px;
+height:40px;
+border:0;
+background-size:40px 40px;
+color:#FFF;
+}
+/* 车位分享标志 */
+.share_place{
+	border: 3px solid #FDA712;
+	border-radius:4px;
+	color: #fff;
+	background-color: #FDA712;
+	font-size: 0.8em;
+}
+#homepage .tip_traffic {
+top:80px;
+right:10px;
+background-image:url(../image/icon_signallamp.png);
+}
+
+#homepage .tip_traffic2 {
+top:80px;
+right:10px;
+background-image:url(../image/icon_signallamp2.png);
+}
+
+#homepage .tip_locat, .amap-geo {
+  bottom: 120px;
+  left: 10px;
+  background: url(../image/icon_locat.png) no-repeat center / 40px;
+  width: 40px;
+  height: 40px;
+  background-position: inherit;
+  position: fixed;
+  opacity: 0.7;
+}
+
+#homepage .tip_number {
+top:130px;
+right:10px;
+background-image:url(../image/icon_number.png);
+}
+
+#homepage .tip_standard {
+top:130px;
+right:10px;
+background-image:url(../image/icon_standard.png);
+}
+
+#homepage .tip_pay {
+top:180px;
+left:10px;
+background-image:url(../image/icon_pay.png);
+}
+/* 锁车业务 样式 start */
+#homepage .tip_focuson  ,#homepage .unlock{
+top:80px;
+left:10px;
+background-image:url(../image/icon_focuson.png);
+}
+#homepage .unlock{
+background-image: url(../image/map_unlock.png);
+background-size: 100%;
+height: 50px;
+background-repeat: no-repeat;
+left: 25px;
+}
+#homepage .unlock span{
+display: block;
+width: 100px;
+height: 20px;
+position: absolute;
+margin-top: 50px;
+margin-left: -15px;
+color: #000;
+font-size: 12px;
+}
+/* 弹出框 --操作提示  */
+.popup_unlock{
+position: fixed;
+top: 50%;
+width: 80%;
+max-height: 160px;
+margin: -90px 0 0 10%;
+z-index: 1001;
+background-color: #FFF;
+display: block;
+border-radius: 10px;
+display:none;
+}
+.item_0{
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border-bottom: 2px solid #18b4ed;
+    width: 100%;
+    background-color: #18b4ed;
+    color: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-size: 16px;
+}
+.item_1{
+    text-align: left;
+    line-height: 30px;
+    max-height: 100px;
+}
+.item_1 ul {
+    //border-bottom: 1px solid #E2E2E2;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 94%;
+    margin-left: 3%;
+    max-height: 100px;
+    overflow-y: auto;
+}
+.item_1 ul li{
+border-top: 1px solid #E2E2E2;
+}
+
+.icon-choose,.icon-out-choose{
+    width: 18px;
+    height: 18px;
+    margin-top: 6px;
+    background: url(../image/choose-out.png) center / 100%;
+    float: right;
+}
+.icon-out-choose{
+    background: url(../image/choose.png) center / 100%;
+}
+.item_2{
+	height: 40px;
+    text-align: left;
+    line-height: 40px;
+    background-color: #fff;
+    border-top: 1px solid #d2d2d2;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.item_2 span{
+    width: 50%;
+    height: 40px;
+    float: left;
+    text-align: center;
+    border-right: 1px solid #E2E2E2;
+}
+.item_2 #unlock_ok{
+    width: 49%;
+    height: 40px;
+    text-align: center;
+    border: none;
+}
+/* 锁车业务 样式 end */
+
+#homepage .tip_focuson_2 {
+top:80px;
+left:10px;
+background-image:url(../image/icon_focuson_2.png);
+}
+
+#homepage .tip_coupon {
+top:130px;
+left:10px;
+background-image:url(../image/icon_coupon.png);
+}
+
+.tip_zoom1 {
+position:fixed;
+right:10px;
+bottom:160px;
+width:40px;
+height:43px;
+background-image:url(../image/icon_scale.png);
+background-size:100% auto;
+}
+
+.tip_zoom2 {
+position:fixed;
+right:10px;
+bottom:120px;
+width:40px;
+height:40px;
+background-image:url(../image/icon_scale.png);
+background-position:0 -45px;
+background-size:100% auto;
+}
+
+.keywordbox {
+	width: 93%;
+	height:44px;
+	top:10px;
+	left:3%;
+	position: fixed;
+	z-index:99;
+	border:1px solid #c3c3c3;
+	border-radius:5px;
+	background:url(../image/icon_search.png) no-repeat #FFF 5px center / auto 80%;
+	font-size:12px;
+	line-height:20px;
+	overflow:hidden;
+}
+
+.keywordbox input[type=button] {
+outline:none;
+border:0;
+border-radius:3px;
+cursor:pointer;
+}
+
+#searchParkName,#keyword {
+margin: 4px 0 2px 15%;
+width:68%;
+height: 38px;
+outline:none;
+border:0;
+background:none;
+font-size:18px;
+}
+#searchParkName {
+	width: 85%;
+}
+#result1 {
+max-height:300px;
+}
+
+#focusonrecords {
+position:absolute;
+top:80px;
+left:50px;
+overflow:auto;
+width:248px;
+max-height:230px;
+border:1px solid #c6c6c6;
+border-radius:4px;
+background-color:#FFF;
+padding:5px;
+}
+
+#focusonrecords li {
+display:block;
+height:36px;
+border-bottom:1px solid #e2e2e2;
+color:#666;
+padding:2px 0;
+}
+
+#focusonrecords li h4 {
+float:left;
+overflow:hidden;
+width:198px;
+width:calc(100% - 50px);
+width:-webkit-calc(100% - 50px);
+width:-moz-calc(100% - 50px);
+height:36px;
+text-overflow:ellipsis;
+white-space:nowrap;
+font-weight:400;
+font-size:1em;
+line-height:36px;
+-moz-text-overflow:ellipsis;
+-webkit-text-overflow:ellipsis;
+margin:0;
+}
+
+#focusonrecords li p {
+float:right;
+width:50px;
+text-align:right;
+font-size:.8em;
+line-height:18px;
+margin:0;
+}
+
+#focusonrecords li p span {
+color:#FD8525;
+}
+
+#focusonrecords ul > p {
+float:left;
+width:100%;
+height:30px;
+background:transparent url(../image/icon_more.png) no-repeat scroll center 14px / 30px;
+}
+
+#searchpage nav {
+	width:96%;
+	min-height:20px;
+	max-height:100%;
+	position:fixed;
+	top:70px;
+	left:0;
+	z-index:99;
+	background-color:#FFF;
+}
+
+#relatedrecords {
+z-index:1000;
+display:none;
+}
+
+#relatedrecords li {
+margin-left:2%;
+width:96%;
+border-bottom:1px solid #ccc;
+line-height:20px;
+padding:5px 0;
+}
+
+#relatedrecords li:before {
+float:left;
+width:20px;
+height:20px;
+background-image:url(../image/icon_search.png);
+background-size:20px 20px;
+content:"";
+margin:10px;
+}
+
+#relatedrecords li h4,#relatedrecords li p {
+height:20px;
+margin:0;
+}
+
+#relatedrecords li p {
+color:#999;
+font-size:.8em;
+}
+
+#searchrecords {
+z-index:999;
+padding:5px 2%;
+}
+
+#searchrecords span {
+float:right;
+margin-right:3%;
+}
+
+#searchrecords li {
+	width:auto;
+    min-width: 10px;
+    height: 20px;
+	float:left;
+	background-color:#E3E3E3;
+	line-height:20px;
+	margin:5px 5px;
+	padding:5px 10px;
+}
+
+.keywordbox .qrcode {
+width:28px;
+height:28px;
+border:0;
+background-image:url(../image/tip_Qrcode.png);
+background-position:center center;
+}
+
+.keywordbox .btnSearch {
+width:16%;
+height:30px;
+/*background:url(../image/tip_line1.png) no-repeat scroll center left;*/
+color:#00AFD1;
+font-weight:700;
+font-size:1.2em;
+margin:10px 1% 0 0;
+}
+
+.btnClear {
+position:absolute;
+width:20px;
+height:20px;
+border-radius:10px;
+background:#999 url(../image/icon_add.png) no-repeat scroll center center / 20px 20px;
+-webkit-transform:rotateZ(45deg);
+-moz-transform:rotateZ(45deg);
+-o-transform:rotateZ(45deg);
+transform:rotateZ(45deg);
+-ms-transform:rotateZ(45deg);
+z-index: 10;
+}
+
+.keywordbox .btnClear{
+	right: 60px;
+	top: 12px;
+}
+#scanpage .btnClear{
+	right: 60px;
+	top: 12px;
+}
+.markerContent_bg{
+	width:40px;
+	height:56px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 34px;
+}
+.markerContent_bg.bg_blue{
+	background-image: url(../image/icon_marker_1.png);
+}
+.markerContent_bg.bg_orange{
+	background-image: url(../image/icon_marker_2.png);
+}
+.markerContent_bg.bg_red{
+	background-image: url(../image/icon_marker_3.png);
+}
+.markerContent_bg.bg_gray{
+	background-image: url(../image/icon_marker_4.png);
+}
+.markerContent_bg.bg_green{
+	background-image: url(../image/icon_marker_5.png);
+}
+.markerContent_bg img{
+	width:40px;
+	height:56px;
+}
+.markername {
+	width:32px;
+	height:30px;
+	line-height:32px;
+	display:block;
+	overflow:hidden;
+	margin-top:-52px;
+	margin-left:3px;
+	color:#666;
+	text-align:center;
+}
+
+#pos {
+position:absolute;
+right:10px;
+bottom:30px;
+padding-right:10px;
+padding-left:10px;
+height:70px;
+border:1px solid #ccc;
+border-radius:3px;
+background-color:#fff;
+font-size:12px;
+line-height:30px;
+}
+
+#pos input {
+height:23px;
+outline:none;
+border:1px solid #ddd;
+border-radius:3px;
+}
+/*.amap-info-content {
+	position:fixed;
+	bottom:10px;
+	left:10px;
+	right:10px;
+	overflow:hidden;
+	width:calc(100% - 22px);
+	width:-moz-calc(100% - 22px);
+	width:-webkit-calc(100% - 22px);
+	width:-ms-calc(100% - 22px);
+	border:1px solid #d2d2d2;
+	border-radius:6px;
+	background:#fff;
+	box-shadow:none;
+	font-size:12px;
+	line-height:1.4;
+	padding:0;
+}
+.amap-info-outer:hover,.amap-menu-outer:hover {
+box-shadow:none;
+}*/
+
+.amap-info em {
+color:#f60;
+}
+
+.tipline {
+margin-top:10px;
+width:100%;
+height:1px;
+background-color:#d0d0d0;
+}
+.follow-inside-btn {
+padding-left:40px;
+border:0;
+color:#545454;
+font-size:1.1em;
+line-height:32px;
+margin: 2px -40px;
+}
+
+
+.icon_arrow {
+	background:transparent url(../image/icon_goto-38.png) no-repeat scroll 20% center / 21px;
+}
+
+.icon_booking {
+	background:transparent url(../image/icon_booking-38.png) no-repeat scroll 20% center / 21px;
+}
+
+.icon_focuson {
+	background:transparent url(../image/icon_focuson-38.png) no-repeat scroll 20% center / 21px;
+}
+
+.icon_focuson2 {
+	background:transparent url(../image/icon_focuson_2-38.png) no-repeat scroll 15% center / 21px;
+}
+
+.icon_price {
+	background:transparent url(../image/icon_pay-38.png) no-repeat scroll 20% center / 21px;
+	border: 0;
+}
+
+.icon_close {
+position:absolute;
+top:5px;
+right:5px;
+z-index:999;
+padding-left:20px;
+width:65px;
+height:20px;
+background:transparent url(../image/icon_close.png) no-repeat scroll left center;
+color:#8E0000;
+}
+
+#scanpage,#bookingScan,#paypage,#payok,#orderpay {
+text-align:center;
+}
+/*
+#scanpage,#bookingScan{padding:10px;}
+*/
+.cardSearchBox{
+	margin:50px 11px;
+	width:95%;
+	width:calc(100% - 22px);
+	height:40px;
+	float:left;
+}
+#scanpage input{
+	width:100%;
+	border:1px solid #c6c6c6;
+	border-radius:3px;
+	font-size:1.1em;
+	height:20px;
+	padding:10px 0px;
+	text-indent:10px;
+	z-index:-1;
+}
+
+#scanpage .Qrcodebox {
+float:right;
+width:60px;
+height:90px;
+margin:20px 20px 0;
+}
+
+#scanpage .Qrcodebox img {
+width:60px;
+height:60px;
+}
+
+.pay_details {
+	background-color:#FFF;
+	padding:10px 0;
+	margin-bottom: 10px;
+}
+
+.pay_details h1 {
+font-weight:700;
+font-size:35px;
+padding:20px 0 30px;color:#010101;
+margin:0 10px;
+border-bottom:#c6c6c6 solid 1px;
+font-weight: normal;
+}
+
+.pay_details,.pay_coupon {
+border-bottom:1px solid #c3c3c3;
+background:#fff;
+border-top:1px solid #c3c3c3;
+}
+
+.pay_details section {
+	height:100px;
+	border-top:1px solid #efefef;
+	font-size:14px;
+  padding: 15px 5%;
+  width: 90%;
+}
+
+.pay_details section dl {
+	clear: both;
+}
+
+.pay_details section dt {
+float:left;
+overflow:hidden;
+width:80px;
+height:20px;
+color:#999;
+text-align:left;
+margin:0;
+padding:0;
+}
+
+.pay_details section dd {
+	float:right;
+	width:70%;
+	width:calc(100% - 80px);
+	text-align:right;
+	color:#010101;
+	margin:0;
+	padding:0;
+	height: 20px;
+	white-space: nowrap;
+	overflow: hidden;
+  	text-overflow:ellipsis;
+}
+
+.pay_details h2 {
+	width:50%;
+	background:transparent url(../image/tip_ok.png) no-repeat scroll center 10px / 70px;
+	margin:0 auto;
+	padding:90px 0 0;
+}
+.pay_details h2.pay_failed{
+	background:transparent url(../image/icon_failed.png) no-repeat scroll center 10px / 70px;
+}
+.pay_details em {
+	color:#00BD00;
+}
+#bookingSelectCar{
+	width:100%;
+	line-height:42px;
+	height:42px;
+	float:left;
+	background:url(../image/tip_goto-38.png) no-repeat scroll 92% center #fff;
+	border-top:1px solid #c3c3c3;
+	border-bottom:1px solid #c3c3c3;
+	background-size: 14px;
+    text-align: left;
+	padding:0 10px;
+}
+#bookingCarNo2{
+	color:#08a6d5;
+	position: absolute;
+	right: 8%;
+}
+#bookingSelectList{
+	position:fixed;
+	bottom:0;
+	padding:5px 1%;
+	max-height:248px;
+	width:100%;
+	left:0;
+	display:none;
+	border-top: 3px solid #c3c3c3;
+	overflow-y: auto;
+	background-color:#FFF;
+	z-index: 999;
+}
+#bookingSelectList li{
+	height: 50px;
+	line-height: 50px;
+	float:left;
+	border:1px solid #999;
+	width:96%;
+	margin:5px 1%;
+}
+.bookingCarIcon{
+	width:14px;
+	height:14px;
+	line-height:20px;
+	float:right;
+	margin:18px 8px;
+	border-radius: 10px;
+}
+.bookingCarIcon.selected{
+	background-color:#f60;
+}
+.bookingCarNo{
+	float: left;
+    margin: 0 10px;
+	width: 80%;
+	text-align: left;
+}
+.pay_coupon {
+height:40px;
+background-color:#FFF;
+line-height:40px;
+margin:20px 0;
+}
+
+.pay_coupon h4 {
+	float:left;
+	padding-left:10px;
+	margin:0;
+	width:70px;
+}
+
+.pay_coupon span {
+	float:right;
+	margin-right:30px;
+	text-align: right;
+	width: 200px;
+	width:48%;
+	width:calc(100%-100px);
+	width:-moz-calc(100%-100px);
+	width:-webkit-calc(100%-100px);
+	width:-ms-calc(100%-100px);
+	white-space: nowrap;
+	overflow: hidden;
+  	text-overflow:ellipsis;
+}
+
+.pay_coupon:after {
+position:absolute;
+right:10px;
+width:30px;
+height:40px;
+background:transparent url(../image/tip_goto-38.png) no-repeat scroll 10px center / 50% 50%;
+content:"";
+}
+
+.pay_coupon2 {
+padding-bottom:0px;
+background-color:#FFF;
+color:#666;
+margin:20px 0 0;
+border-bottom:1px solid #c3c3c3;
+border-top:1px solid #c3c3c3;
+}
+
+.pay_coupon2 h4 {
+border-bottom:1px solid #c3c3c3;
+text-align:left;
+font-size:1.1em;
+line-height:32px;
+margin:0 10px;
+}
+
+.pay_coupon2 p span {
+color:#FE7B11;
+font-weight:700;
+font-size:2em;
+}
+
+.btn_pay,.btn_receive {
+	border:0;
+	border-radius:2px;
+	color:#FFF;
+	font-size:1.1em;
+	line-height:40px;
+	margin:10px;
+	width:90%;
+	width:calc(100% - 20px);
+	width:-moz-calc(100% - 20px);
+	width:-webkit-calc(100% - 20px);
+	width:-ms-calc(100% - 20px);
+}
+
+.btn_pay {
+	background-color:#08a6d5;
+}
+
+.pay_couponbox {
+position:fixed;
+bottom:0;
+border-top:1px solid #b2b2b2;
+background-color:#eee;
+text-align:left;width:100%;
+max-height:190px;
+overflow-y: auto;
+}
+
+.pay_couponbox li {
+height:50px;
+border:1px solid #c6c6c6;
+background-color:#FFF;
+margin:5px 10px;
+padding:2px 8px;
+}
+
+.pay_couponbox li label {
+float:left;
+width:90%;
+color:#878787;
+}
+
+.pay_couponbox li h3 {
+	color:#545454;
+	font-size:1.1em;
+	margin:5px 0;
+	white-space: nowrap;
+	overflow: hidden;
+  	text-overflow:ellipsis;
+}
+
+.pay_couponbox li input[type=radio] {
+float:left;
+width:10%;
+border:1px solid red;
+margin:18px 0;
+padding:5px;
+}
+
+.popup_share {
+position:fixed;
+bottom:0;
+z-index:102;
+width:100%;
+height:160px;
+background-color:#E3DFE0;
+}
+
+.popup_txt {
+position:absolute;
+top:0;
+z-index:101;
+padding-top:100%;
+width:100%;
+background-color:#000;
+color:#FFF;
+text-align:center;
+line-height:100%;
+opacity:0.5;
+}
+
+#popup_share_TL,#popup_share_AM {
+float:left;
+width:40%;
+height:160px;
+margin:0 5%;
+}
+
+#popup_share_TL {
+background:transparent url(../image/icon_shareTL.png) no-repeat scroll left center / 70px;
+}
+
+#popup_share_AM {
+background:transparent url(../image/icon_shareAM.png) no-repeat scroll right center / 70px;
+}
+
+.slides {
+position:relative;
+display:block;
+width:100%;
+height:160px;
+list-style:none;
+margin:0;
+padding:0;
+float:left;
+}
+
+.slides li {
+position:absolute;
+display:block;
+width:100%;
+height:100%;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+.slides li img {
+display:block;
+width:100%;
+height:100%;
+text-indent:-9999px;
+}
+
+#pagination {
+position:absolute;
+top:160px;
+left:50%;
+z-index:9900;
+display:block;
+list-style:none;
+margin:0;
+padding:5px 15px 5px 0;
+}
+
+#pagination li {
+float:left;
+display:block;
+margin-left:10px;
+width:10px;
+height:10px;
+border-radius:5px;
+background:#FFF;
+list-style:none;
+}
+
+#pagination li a {
+display:block;
+width:100%;
+height:100%;
+text-indent:-9999px;
+margin:0;
+padding:0;
+}
+
+#pagination li.current {
+background:#0092CE;
+}
+
+#parkingdetails .pd_hdp {
+	position:relative;
+	width:100%;
+	height:160px;
+	background:url(../image/bg_img_parking_default.png) no-repeat center top / auto 100% #F0F0F0;
+}
+#parkingdetails .pd_details h4 {
+	margin:0;
+	padding:13px 10px;
+	height: 20px;
+}
+.pd_details #parkName{
+	width: 65%;
+	height: 20px;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.pd_goto {
+position:absolute;
+top:12px;
+right:8px;
+width:45px;
+height:20px;
+color:#00AFD1;
+font-size:12px;
+}
+
+#parkingdetails .pd_details h4 span,#couponitem > p span {
+	float:right;
+	display:block;
+	padding-left:30px;
+	width:70px;
+	background:transparent url(../image/icon_goto-38.png) no-repeat scroll 0 0 / 30% 100%;
+	color:#00AFD1;
+	font-weight:400;
+	white-space: nowrap;
+}
+
+#parkingdetails .pd_details nav {
+	padding: 0 10px;
+}
+
+#parkingdetails .pd_details nav li {
+float:left;
+width:92%;
+border-top:1px solid #C1C1C1;
+padding:10px 0 10px 8%;
+}
+
+#parkingdetails .pd_details nav li.tip_distance {
+background:url(../image/icon_distance.png) no-repeat left center / 24px;
+}
+
+#parkingdetails .pd_details nav li.tip_price {
+background:url(../image/icon_price.png) no-repeat left center / 24px;
+}
+
+#parkingdetails .pd_details nav li.tip_parkspace {
+background:url(../image/icon_space.png) no-repeat left center / 24px;
+}
+
+#parkingdetails .pd_details nav li.tip_address {
+background:url(../image/icon_address.png) no-repeat left center / 24px;
+}
+
+#parkingdetails .pd_details nav li.tip_charge {
+float:left;
+background:url(../image/icon_charge.png) no-repeat left 8px / 24px;
+}
+
+#parkingdetails .pd_details nav li.tip_charge p {
+margin-bottom:50px;
+color:#878787;
+line-height:1.8em;
+}
+
+.fp_list li {
+	border-top:1px solid #c6c6c6;
+	border-bottom:1px solid #c6c6c6;
+	background-color:#FFF;
+	margin:0 0 10px;
+	padding:5px 5%;
+	min-height:60px;
+	text-align: left;
+}
+
+.focusonlist_li_name{
+	height: 20px;
+	overflow: hidden;
+	float: left;
+	width: 80%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dixixan{ border-bottom:#c6c6c6 solid 1px;}
+
+#searchList .search_list_addr{
+	width: 220px;
+    display: block;
+    float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+#searchList .search_list_price{
+	float:right;
+}
+.clear{
+	clear: both;
+}
+.fp_list li p {
+	color:#878787;
+	font-size:12px;
+	width: 100%;
+	height: 18px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	float: left;
+}
+.fp_list li .fp_list_title{
+	max-width: 90%;
+	overflow: hidden;
+	float:left;
+}
+.fp_list li .icon_delay{
+	width:18px;
+	height:18px;
+	background:url(../image/icon_order_delay.png) no-repeat center right / 18px;
+	float:left;
+	margin-left:5px;
+}
+.tp_park_details{
+	width:70%;
+	float:left;
+	height:72px;
+}
+.isOverTime{
+	width:30%;
+	height:72px;
+	float:left;
+}
+.isOverTime.overtime{
+	background: url(../image/icon_order_overdue.png) no-repeat center / auto 100%;
+}
+.fp_list .bookTime{
+	color:#f60;
+}
+.fp_list .bookTime:before{
+	content:"预订时间：";
+	width:60px;
+	float:left;
+	color:#f60;
+}
+.fp_list .focusonlist_content{
+	display: block;
+	width: 100%;
+	height: 40px;
+}
+.fp_list .focusonlist_li_more{
+	float:left;
+	width:100%;
+	height:20px;
+}
+.searchParkMark{
+	width: 100%;
+	height: 40px;
+	float: left;
+	display: block;
+}
+.top-border{
+	border-top: #c6c6c6 solid 1px;
+}
+.fp_num_0:before {
+float:left;
+width:14px;
+height:14px;
+border-radius:7px;
+content:"";
+margin:3px 5px 0 0;
+}
+.parkList .green:before{
+background-color:#15C42F;
+}
+.parkList .orange:before{
+background-color:#FE7B11;
+}
+.parkList .red:before{
+background-color:#FB1F1F;
+}
+.parkList .gray:before{
+background-color:#696969;
+}
+
+.fp_num_1 {
+color:#FF3F3F;
+}
+
+.fp_num_1:before {
+background-color:#FF3F3F;
+}
+
+.fp_num_3 {
+color:#15C42F;
+}
+
+.fp_num_3:before {
+background-color:#15C42F;
+}
+
+.goto {
+float:right;
+margin-top:-26px;
+padding-left:30px;
+width:auto;
+background:transparent url(../image/icon_goto-38.png) no-repeat scroll 0 0 / 30% 100%;
+color:#00AFD1;
+font-weight:400;
+font-size:13px;
+}
+.detail{
+	width:50px;
+	color:#00AFD1;
+	text-align:right;
+	height: 25px;
+	line-height: 25px;
+	float:right;
+}
+.fp_sort {
+margin-bottom:10px;
+height:42px;
+border-bottom:1px solid #c6c6c6;
+background-color:#FFF;
+}
+
+.fp_sort li {
+float:left;
+width:40%;
+border-bottom:2px solid #FFF;
+text-align:center;
+font-size:1em;
+line-height:20px;
+margin:0 5%;
+padding:10px 0;
+}
+
+.fp_sort li.selected {
+border-bottom:2px solid #00AFD1;
+color:#00AFD1;
+}
+
+.fp_search {
+width:30px;
+height:30px;
+background:transparent url(../image/icon_search.png) no-repeat scroll 0 8px / 30px 30px;
+}
+
+.fp_menu {
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+height:40px;
+border-top:1px solid #c6c6c6;
+background-color:#FFF;
+}
+li.selectPark{
+	width: 100%;
+	border-top: 1px solid #C6C6C6;
+	height:40px;
+	line-height: 40px;
+	text-align: center;
+	float:left;
+	background-color: #3CADFD;
+    color: #fff;
+    border-radius: 5px;
+	display: none;
+}
+li.tip_li{
+	width:13.9%;
+	width:calc(14% - 1px);
+	width:-moz-calc(14% - 1px);
+	width:-webkit-calc(14% - 1px);
+	width:-ms-calc(14% - 1px);
+	padding:5px 0 5px 11%;
+	float:left;
+	border-right:1px solid #c6c6c6;
+	height:20px;
+	line-height:20px;
+	margin:5px 0;
+}
+li.tip_li_3{
+	width:calc(20% - 1px);
+	width:-webkit-calc(20% - 1px);
+	padding:5px 0 5px 13.3%;
+	float:left;
+	border-right:1px solid #c6c6c6;
+	height:20px;
+	line-height:20px;
+	margin:10px 0;
+}
+li.tip_li_yd{
+	width:14%!important;
+	width:calc(14% - 1px);
+	width:-moz-calc(14% - 1px);
+	width:-webkit-calc(14% - 1px);
+	width:-ms-calc(14% - 1px);
+	  padding-left: 10%;
+	float:left;
+	border-left:1px solid #c6c6c6;
+	height:20px;
+	line-height:20px;
+	margin:10px 0;
+}
+
+li.tip_li_oc{
+	width:15%!important;
+	width:calc(15% - 1px);
+	width:-moz-calc(15% - 1px);
+	width:-webkit-calc(15% - 1px);
+	width:-ms-calc(15% - 1px);
+	  padding-left: 9%;
+	float:left;
+	border-left:1px solid #c6c6c6;
+	height:20px;
+	line-height:20px;
+	margin:10px 0;
+}
+
+.amap-info-park{	
+	height: 24px;
+	padding: 10px 10px 0px;
+	font-size: 1rem;
+}
+
+.amap-info-park label{
+	width: 82%;
+	float: left;
+	overflow: hidden;
+	word-break: break-all;
+	text-overflow: ellipsis;
+	height: 24px;
+	line-height: 24px;
+}
+
+.amap-info-num{
+	height:25px;
+	line-height:25px;
+	padding:0 10px;
+	overflow:hidden;
+}
+
+.amap-info-num span{
+	float:left;
+	white-space: nowrap;
+}
+	
+li.tip_overtime {
+background:#FFF url(../image/icon_overtime-44.png) no-repeat scroll 20% center / 24px;
+}
+li.tip_overtime_yd {
+background:#FFF url(../image/icon_overtime-44.png) no-repeat scroll 26% center / 24px;
+background-position:left;
+}
+
+li.tip_goto {
+background:#FFF url(../image/icon_goto-44.png) no-repeat scroll 20% center / 24px;
+}
+li.tip_goto_yd {
+background:#FFF url(../image/icon_goto-44.png) no-repeat scroll 26% center / 24px;
+background-position:left;
+}
+li.tip_focuson2 {
+background:#FFF url(../image/icon_focuson_2-44.png) no-repeat scroll 20% center / 24px;
+}
+
+li.tip_focuson {
+background:#FFF url(../image/icon_pay-38.png) no-repeat scroll 20% center / 24px;
+}
+li.tip_focuson_yd {
+background:#FFF url(../image/jsl_icon_car_life_detail_mid.png) no-repeat scroll 26% center / 24px;
+background-position:left;
+}
+li.tip_parklock_yd {
+background:#FFF url(../image/icon_unlock_park_small.png) no-repeat scroll 26% center / 20px;
+background-position:left;
+}
+li.tip_tohere {
+	background:#FFF url(../image/icon_goto-38.png) no-repeat scroll 10% center / 24px;
+}
+li.tip_booking {
+	background:#FFF url(../image/icon_booking-44.png) no-repeat scroll 10% center / 24px;
+}
+
+li.tip_card {
+background:#FFF url(../image/icon_card-44.png) no-repeat scroll 20% center / 24px;
+}
+li.tip_pay {
+background:#FFF url(../image/icon_pay-44.png) no-repeat scroll 20% center / 24px;
+}
+
+.bf_details {
+width:90%;
+height:50px;
+background:url(../image/icon_bookingfail.png) no-repeat scroll center 25px / 100px 100px transparent;
+padding:150px 5% 0;
+}
+
+.bf_btn_recommend {
+margin-left:5%;
+width:80px;
+height:35px;
+background-color:#00BD00;
+color:#FFF;
+text-align:center;
+}
+
+.popup {
+position:fixed;
+bottom:50px;
+display:none;
+width:100%;
+height:100%;
+background-color:#000;
+opacity:0.5;
+}
+#couponlist,#couponitem {
+	padding:0 5px;
+}
+#couponlist li,#couponitem li {
+	position:relative;
+	height:108px;
+	color:#FFF;
+	margin-top:12px;
+	margin:12px 5px 0;
+	width:calc(50%-10px);
+	width:-moz-calc(50%-10px);
+	width:-webkit-calc(50%-10px);
+	width:-ms-calc(50%-10px);
+	float:left;
+}
+#couponlist li.coupon_park,#couponitem li.coupon_park {
+	background: url(../image/pic_couponbg_park.png) no-repeat 103% -15px / auto 75%, url(../image/pic_couponbg_orange.png) repeat-x center center / auto 100%;
+}
+#couponlist li.coupon_sale,#couponitem li.coupon_sale {
+	background: url(../image/pic_couponbg_sale.png) no-repeat 103% -15px / auto 75%, url(../image/pic_couponbg_red.png) repeat-x center center / auto 100%;
+}
+#couponlist li.coupon_free,#couponitem li.coupon_free {
+	background: url(../image/pic_couponbg_free.png) no-repeat 103% -15px / auto 75%, url(../image/pic_couponbg_blue.png) repeat-x center center / auto 100%;
+}
+#couponitem li {
+	height:160px;
+	text-align:center;
+	float:none;
+}
+
+#couponlist li article,#couponitem li article {
+float:left;
+width:100%;
+margin:4px 0 0;
+padding:10px 0;
+}
+
+#couponitem article {
+margin:20px 0;
+}
+
+#couponlist li img {
+float:left;
+margin-right:10px;
+width:100px;
+height:60px;
+}
+
+#couponlist li h3,#couponitem li h3 {
+height:30px;
+line-height:30px;
+}
+
+#couponlist li p,#couponitem li p {
+height:20px;
+line-height:20px;
+}
+
+#couponlist li article p,#couponlist li article h3,#couponitem li article p,#couponitem li article h3 {
+margin:0 4%;
+}
+
+#couponlist li > p {
+float:left;
+width:96%;
+color:#000;
+padding:7px 2%;
+background-color: #FFF;
+}
+
+#couponlist li h3,#couponlist li p, .couponlist_parkname {
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	-webkit-text-overflow:ellipsis;
+	-moz-text-overflow:ellipsis;
+}
+.couponlist_parkname{
+	width: 128px;
+	width:calc(100%-168px);
+	width:-moz-calc(100%-168px);
+	width:-webkit-calc(100%-168px);
+	width:-ms-calc(100%-168px);
+}
+
+.couponlist_valitime {
+	width: 160px;
+	
+	text-align:right;
+}
+
+#couponitem article h4 {
+font-size:1.3em;
+margin:10px 0;
+}
+#couponitem { padding:0px 10px;}
+#couponitem article h1 {
+font-size:2em;
+line-height:40px;
+}
+
+#couponitem > p {
+float:left;
+width:96%;
+border:1px solid #c6c6c6;
+margin:10px 0 0px;
+padding:10px 2%;
+}
+
+#btn_share {
+margin:0 5%;
+}
+
+#getticket {
+position:fixed;
+width:100%;
+height:100%;
+background:url(../image/pic_getticket.png) no-repeat scroll top center / 100%;
+}
+
+.btn_getticket {
+position:fixed;
+bottom:40px;
+left:50%;
+margin-left:-150px;
+width:300px;
+height:45px;
+border-radius:5px;
+background-color:#FF001F;
+color:#FFF;
+font-size:1.5em;
+line-height:45px;
+}
+
+#scanpage nav,#bookingScan nav{
+position:absolute;
+top: 100px;
+width: calc(88% - 2px);
+background:#fff;
+border:#c6c6c6 solid 1px;
+left: 5%;
+right:5%;
+padding: 5px 1%;
+display:none;
+}
+
+#scanpage nav li,#bookingScan nav li{
+width:34px;
+height:34px;
+font-size:16px;
+background:#f3f3f3;
+text-align:center;
+border:#c6c6c6 solid 1px;
+border-radius:3px;
+line-height:30px;
+cursor:pointer;
+float:left;
+margin: 2px 0.6%;
+}
+
+#scanpage nav li:hover,#scanpage nav li:active,#bookingScan nav li:hover,#bookingScan nav li:active {
+background:#00afd1;
+color:#fff;
+}
+
+h1,h2,h3,h4,h5,h6,#searchpage h4 {
+font-weight:400;
+}
+
+.hide,.amap-copyright,.amap-info-close,.amap-info-sharp {
+display:none;
+}
+
+
+.keywordbox input[type=text]:active,#bookingspace li p:first-of-type {
+border:none;
+}
+
+#payok p,#orderpay p {
+margin:10px 0;
+}
+#scanpage p,#paypage p{ margin:0;}
+.pay_details span,#parkingdetails .pd_details nav li span,.fp_num_2 {
+color:#FE7B11;
+}
+#emptyParkPlaceCount:before{
+	content:"车位：";
+	float: left;
+	color: #545454;
+	width: 50px;
+} 
+#emptyParkPlaceCount:after{
+	content:"/";
+	float: right;
+	color: #545454;
+} 
+.btn_receive,.fp_num_2:before {
+background-color:#FE7B11;
+}
+
+.pd_details,#couponlist li em,#couponlist li p b {
+float:left;
+}
+#temp_carousel_parkInfo{
+	width: 100%;
+ 	overflow: hidden;
+	padding: 0px;
+	margin: 0px;
+	transition-duration: 200ms;
+	-webkit-transition-duration: 200ms;
+	-webkit-transform: translate(0px, 0px) translateZ(0px);
+	height: 102px;
+}
+#temp_carousel_parkInfo .carousel_everypark{
+	width:94%;
+	width:-webkit-calc(100% - 22px);
+	height:100px;
+	margin:0 3%;
+	-webkit-margin:0 10px;
+	float:left;
+	background:#FFF;
+	border: 1px solid #DEDEDE;
+	border-radius: 4px;
+}
+.showMsg{
+	width:100%;
+	position: fixed;
+	z-index: 1;
+	border-radius: 6px;	
+	bottom: 10px;
+	left: 0;
+	right: 0;
+	height: 102px;
+	font-size: 0.8rem;
+}
+.showMsg ul{
+	/*background-color: #fff;
+	margin:0 10px;
+	border:1px solid #DEDEDE;
+	border-radius:4px;*/
+	float: left;
+	box-shadow:0 0 1px 1px #e2e2e2;
+	display:table-cell;
+	vertical-align:top;
+}
+.phone_ticket{position: fixed;
+  bottom: 90px;
+  left: 50%;
+  margin-left: -150px;
+  width: 300px;
+  height: 45px;
+  border-radius: 5px;
+  background-color: #666666;
+  color: #FFF;
+  font-size: 1.5em;
+  line-height: 45px;
+  text-indent: 10px;
+}
+
+#poptip {
+	  position: fixed;
+	  top: 50%;
+	  left:10%;
+	  right: 0;
+	  width: 70%;
+	  font-size: 14px;
+	  text-align: center;
+	  background-color: rgba(0, 0, 0, 0.5);
+	  padding: 10px 5%;
+	  color: #fff;
+	  border-radius: 4px;
+	  -webkit-box-sizing: content-box;
+	  -moz-box-sizing: content-box;
+	  box-sizing: content-box;
+	  z-index: 110;
+}
+.delay_book_btn{background-color: #fff;}  
+.progress{z-index: 2000}
+.mask{
+	position: fixed;
+	top: 0;right: 0;bottom: 0;left: 0;
+	z-index: 1000;
+	background-color: #000000;
+	opacity: 0.5;
+}
+/*确认提示框*/
+.confirm{
+	width: 70%;
+	min-height: 50px;
+	margin: -50px 10%;
+	position: fixed;
+	left:0;
+	top: 50%;
+	z-index: 1000;
+	background-color: #FFF;
+	padding: 10px 5%;
+	border: 1px solid #B2B2B2;
+	box-shadow: 1px 1px 1px 1px #CCC;
+}
+.confirm p{
+	line-height: 20px;
+	height: 40px;
+	width: 100%;
+	float: left;
+	margin: 10px 0;
+	text-align: left;
+}
+#confirm_sure,#confirm_cancel{
+	width:40%;
+	height:30px;
+	line-height: 30px;
+	text-align: center;
+	float:left;
+	background:#fff;
+	border: 1px solid #B2B2B2;
+}
+#confirm_cancel{
+	float:right;
+}
+
+/* Minsmartphones (portrait and landscape) ———– */
+@media only screen
+and (max-device-width : 319px) {
+#keyword0, #keyword {
+  margin: 4px 0 2px 20%;
+  width: 60%;
+}
+.keywordbox .btnSearch {
+	width: 19%;
+}
+#homepage .tip_standard {
+	top: 80px;
+	right: 60px;
+}
+#couponlist li > p{
+	padding: 0 2%;
+	height:auto;
+	line-height: 18px;
+	font-size: 12px;
+}
+.couponlist_valitime{
+	float:left;
+	text-align: left;
+}
+#couponlist li.coupon_park,#couponitem li.coupon_park {
+	background: url(../image/pic_couponbg_park.png) no-repeat 108% -15px / auto 75%, url(../image/pic_couponbg_orange.png) repeat-x center center / auto 100%;
+}
+/*#couponlist li.coupon_sale,#couponitem li.coupon_sale {
+	background: url(../image/pic_couponbg_sale.png) no-repeat 108% -15px / auto 75%, url(../image/pic_couponbg_red.png) repeat-x center center / auto 100%;
+}
+#couponlist li.coupon_free,#couponitem li.coupon_free {
+	background: url(../image/pic_couponbg_free.png) no-repeat 108% -15px / auto 75%, url(../image/pic_couponbg_blue.png) repeat-x center center / auto 100%;
+}*/
+}
+/* Minsmartphones ———– */
+@media only screen
+and (max-device-width : 320px){
+/*#homepage .tip_pay {
+    top: 80px;
+    left: 60px;
+}*/
+}
+/* Minsmartphones (landscape) ———– */
+@media screen
+and (max-device-height : 321px){
+
+.pay_coupon{
+	margin:10px 0 0;
+}
+.pay_details {
+	padding: 10px 0 0;
+}
+.pay_details h1 {
+	padding: 10px 0;
+}
+#payok .pay_details{
+	height: 120px;
+}
+#payok .pay_details p{
+	text-align: left;
+}
+#payok .pay_details p:first-of-type{
+	margin-top: 40px;
+}
+#scanpage {
+	padding: 0;
+}
+.pay_details section {
+	padding:10px;
+}
+.pay_details h2 {
+	float:left;
+}
+.btn_pay{
+	margin:10px 0 3px;
+}
+#scanpage .btnClear{
+	top: 60px;
+	right: 30px;
+}
+}
+/* Smartphones ———– */
+@media screen
+and (max-device-height : 321px){
+	/*默认代码*/
+}
+/* Smartphones (portrait) ———– */
+@media only screen
+and (min-device-width : 321px)
+and (max-device-width : 559px){
+#couponlist li{
+	float:none;
+}
+}
+@media screen and (max-width:321px){	
+	body{font-size: 12px;}
+	h4{font-size: 12px;}
+}
+
+/*@media screen and (min-width:480px) and (max-width:639px){
+#keyword0,#keyword {
+	margin: 4px 0 2px 10%;
+	width:75%;
+	height: 42px;
+}
+.keywordbox .btnSearch {
+    width: 12%;
+    height: 30px;
+    margin: 10px 1% 0px 0px;
+}
+#focusonrecords {
+	width:368px;
+}
+#focusonrecords li h4{
+	width: 280px;
+}
+#focusonrecords li p{
+	width: 80px;
+}
+.keywordbox .btnClear{
+	top: 15px;
+	right: 15%;
+}
+}
+@media screen and (min-width:640px){
+
+#keyword0,#keyword {
+	margin: 4px 0 2px 8%;
+	width:82%;
+	height: 42px;
+}
+.keywordbox .btnSearch {
+    width: 9%;
+    height: 30px;
+    margin: 10px 1% 0px 0px;
+}
+#focusonrecords {
+	width:368px;
+}
+#focusonrecords li h4{
+	width: 280px;
+}
+#focusonrecords li p{
+	width: 80px;
+}
+.keywordbox .btnClear{
+	top: 15px;
+	right: 12%;
+}
+}*/
+@media screen
+and (min-device-width : 560px){
+#couponlist li, #couponitem li {
+	width:48%;
+	width:calc(50%-10px);
+	width:-moz-calc(50%-10px);
+	width:-webkit-calc(50%-10px);
+	width:-ms-calc(50%-10px);
+}
+.couponlist_parkname{
+	width: 85px;
+	width: calc(100%-85px);
+	width: -moz-calc(100%-85px);
+	width: -webkit-calc(100%-85px);
+	width: -ms-calc(100%-85px);
+}
+}
+/* iPads (portrait) ———– */
+@media only screen
+and (min-device-width : 760px)
+and (orientation : portrait) {
+#couponlist li, #couponitem li {
+	width:48.6%;
+	width:calc(50%-10px);
+	width:-moz-calc(50%-10px);
+	width:-webkit-calc(50%-10px);
+	width:-ms-calc(50%-10px);
+}
+.couponlist_parkname{
+	width: 176px;
+	width: calc(100%-176px);
+	width: -moz-calc(100%-176px);
+	width: -webkit-calc(100%-176px);
+	width: -ms-calc(100%-176px);
+}
+}
+/* iPads (landscape) ———– */
+@media only screen
+and (min-device-width : 760px)
+and (orientation : landscape) {
+#couponlist li, #couponitem li {
+	width:48%;
+	width:calc(50%-10px);
+	width:-moz-calc(50%-10px);
+	width:-webkit-calc(50%-10px);
+	width:-ms-calc(50%-10px);
+}
+.couponlist_parkname{
+	width: 85px;
+	width: calc(100%-85px);
+	width: -moz-calc(100%-85px);
+	width: -webkit-calc(100%-85px);
+	width: -ms-calc(100%-85px);
+}
+}
+/* Desktops and laptops ———– */
+@media only screen
+and (min-width : 1024px) {
+#couponlist li, #couponitem li {
+	width:32.3%;
+	width:calc(33.3%-10px);
+	width:-moz-calc(33.3%-10px);
+	width:-webkit-calc(33.3%-10px);
+	width:-ms-calc(33.3%-10px);
+}
+.couponlist_parkname{
+	width: 146px;
+	width: calc(100%-146px);
+	width: -moz-calc(100%-146px);
+	width: -webkit-calc(100%-146px);
+	width: -ms-calc(100%-146px);
+}
+}
+/* Large screens ———– */
+@media only screen
+and (min-width : 1600px) {
+#couponlist li, #couponitem li {
+	width:24%;
+	width:calc(25%-10px);
+	width:-moz-calc(25%-10px);
+	width:-webkit-calc(25%-10px);
+	width:-ms-calc(25%-10px);
+}
+.couponlist_parkname{
+	width: 160px;
+	width: calc(100%-160px);
+	width: -moz-calc(100%-160px);
+	width: -webkit-calc(100%-160px);
+	width: -ms-calc(100%-160px);
+}
+}

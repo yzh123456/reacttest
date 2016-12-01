@@ -1,0 +1,357 @@
+﻿﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<title></title>
+		<link href="./css/amap.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+	<!--ajax-->
+	<img id="progressImgage" class="progress hide" alt="" src="image/ajax-loader.gif"/>
+	<div id="maskOfProgressImage" class="mask" style="display:none;"></div>
+	<!--弹出框信息-->
+	<div id="poptip" style="display:none;"></div>
+	<!--返回按钮-->
+	<div class="icon_return" id="icon_return"></div>
+	<!--确认提示框,推出导航-->
+	<div class="confirm hide">
+        <p>确定退出导航吗？</p>
+        <div class="clear"></div>
+        <button type="button" value="确定" id="confirm_sure">确定</button>
+        <button type="button" value="取消" id="confirm_cancel">取消</button>
+    </div>
+	<article>
+		<!--默认地图页面-->
+		<section id="homepage">
+			<div id="mapContainer"></div>
+			<!--停车费-->
+			<div id="tip_layer" class="tip_map tip_standard"></div>
+			<!--地图放大/缩小-->
+			<div id="tip_zoom1" class="tip_zoom1" value=""></div>
+			<div id="tip_zoom2" class="tip_zoom2" value=""></div>
+			<!--实时交通-->
+			<div id="tip_traffic" class="tip_map tip_traffic2" value=""></div>
+			<!--定位-->
+			<div id="amap-geo" class="tip_map amap-geo" value="" onClick="addtoolbar()"></div>
+			<!--关注-->
+			<div id="tip_focuson" class="tip_map tip_focuson" value="" style="display:none;"></div>
+			<!-- 车辆解锁 -->
+			<div id="unlock" class="tip_map unlock hide" value="" style="">
+				<span>解除车辆保护</span>
+			</div>
+			<div id="unlock_mask" class="mask" style="display:none;"></div>
+			<div id="" class="popup_unlock ">
+				<div class="item_0">确定要解锁当前车辆吗？</div>
+		        <div class="item_1">
+		        	<ul>
+		        		<!-- <li>粤D12123 <div class="icon-choose icon-out-choose"></div></li>
+		        		<li>粤D12155 <div class="icon-choose"></div></li>
+		        		<li>粤D12123 <div class="icon-choose"></div></li>
+		        		<li>粤D12155 <div class="icon-choose"></div></li>
+		        		<li>粤D12123 <div class="icon-choose"></div></li> -->
+		        	</ul>
+		        </div>
+		        <div class="item_2"><span id="unlock_cel">取消</span><span id="unlock_ok">确定</span></div>
+		    </div>
+			<nav id="focusonrecords" style="display:none;">
+				<li id="attentionParkMsg" style="display:none;" onclick="AttentionListDetail(this);">
+					<h4 id="parkNameAttention"></h4>
+					<p>
+						<span id="parkPriceAttention"></span>
+						<br>
+						<span id="parkDistanceAttention"></span>
+					</p>
+				</li>
+				<ul id="attentionParkList"></ul>
+			</nav>
+			<!--预订-->
+			<div id="tip_coupon" class="tip_map tip_coupon" type="button" onclick="ShowParkMonthList(this);" style="display:none;"></div>
+			<!--导航-->
+			<div id="tip">
+				<div id="result" style="display:block;"></div>
+			</div>
+			<!--顶部工具栏-->
+			<div class="keywordbox">
+				<input type="text" id="searchParkName" name="searchParkName" value="" placeholder="停车场" /><!--默认搜索框-->
+			</div>
+			<!--周围停车左右场滑动显示start-->
+			<ul id="temp_carousel_parkInfo_ul" style="display:none;">
+				<div class="carousel_everypark">
+					<li>
+						<h4 class="amap-info-park">
+							<label id="carouselParkName"></label>
+							<span style="float:right;color: #EF5411;" onclick="IndexDetail(this);">详情&gt;&gt;</span>
+						</h4>
+						<div class="amap-info-num">
+							<span style="width:34%; float:left; ">
+								价格:<em id="carouselParkPrice"></em>元/小时
+							</span>
+							<span style="width:36%; text-align:center; float:left;">
+								车位:<em id="carouselParkBeds"></em>/<em id="carouselParkTotalBeds"></em>
+							</span>
+							<span style="width:30%;text-align:right; float:left;">
+								距离:<em id="carouselParkDistance"></em>
+							</span>
+						</div>
+					</li>
+					<li class="tip_li amap-info-btn icon_arrow" onclick="driving_route();">去这里</li>
+					<li class="tip_li amap-info-btn icon_booking" onclick="PayBookPark();" id="btn_booking">预订</li>
+					<li class="tip_li amap-info-btn clickFollow" id="isattention" onclick="isFollowPark(this);" data-attention>未关注</li>
+					<li class="tip_li amap-info-btn icon_price" style="border:none;" onclick="showFeePay(this);">缴费</li>
+					<li class="selectPark" style="display:none;" id=""><img style="width: 15px; height: 15px;" src="image/seek_car_i_am_here.png" /><label>我在这里</label></li>
+				</div>
+			</ul>
+			<div id="leftTabBox" class="tabBox">
+				<div class="bd" id="temp_carousel_parkInfo"></div>
+			</div>
+			<!--周围停车场左右滑动显示end-->
+		</section>
+
+		<!--停车场详情图片-->
+		<section id ="showParkDetailImage">
+			<img style="position: fixed;width: 100%;height: 100%;">
+		</section>
+		<!--停车场详情-->
+		<section id="parkingdetails">
+			<article class="pd_hdp">
+				<div id="parkDetailImages" class="tabBox">
+					<div class="bd" id="parkDetailImagesList"></div>
+				</div>
+			</article>
+			<article class="pd_details" id="detailPark" style="width:100%;">
+				<h4>
+					<label id="parkName"></label>
+					<span onClick="comeMap();">进入车场</span>
+				</h4>
+				<nav>
+					<ul>
+						<li class="tip_distance">
+							距离：
+							<span id="distance">0</span>
+						</li>
+						<li class="tip_price">
+							价格：
+							<span id="price">0</span>元/小时
+						</li>
+						<li class="tip_parkspace">
+							<div id="emptyParkPlaceCount" style="float:left;">0</div>
+							<div id="parkPlaceCount">0</div>
+							<span id="go_to_parking">有位分享</span>
+						</li>
+						<li class="tip_address">
+							地址：
+							<em id="address"></em>
+						</li>
+						<li class="tip_charge">
+							收费信息
+							<p id="park_fee_scale"></p>
+						</li>
+					</ul>
+				</nav>
+			</article>
+			<article class="fp_menu">
+				<nav>
+					<ul>
+						<li class="tip_li_yd tip_tohere" onclick='DrivingRouteInsiade();'>去这里</li>
+						<li class="tip_li_yd tip_booking" onclick='PayBookPark();'>预订</li>
+						<li class="tip_li_yd amap-info-btn icon_focuson clickFollow" id="detailAttention" onclick="DetailFollowPark(this);">未关注</li>
+						<li class="tip_li_yd tip_focuson" style="border-right:0;" onclick="showFeePay(this);">缴费</li>
+					</ul>
+				</nav>
+			</article>
+		</section>
+
+		<!--跳转搜索页面-->
+		<section id="searchpage">
+			<div class="keywordbox">
+				<input type="text" id="keyword" placeholder="停车场" autocomplete="on"/>
+				<a class="btnSearch"  onClick="SecrchByKeyword();">搜索</a>
+				<div class="btnClear" style="display:none;"></div>
+			</div>
+			<nav id="searchrecords">
+				<h4>
+					搜索历史
+					<span id="clearrecords">清除</span>
+				</h4>
+				<ul id="historyCode"></ul>
+			</nav>
+		</section>
+
+		<!--关注列表-->
+		<section id="focusonlist">
+			<article class="fp_list">
+				<nav>
+					<li id="focusonlist_li" style="display:none;">
+						<div class="focusonlist_content">
+						<h4>
+							<label id="focusonlist_li_name" class="focusonlist_li_name"></label>
+							<span id="focusonlist_li_price" style="float:right"></span>
+						</h4>
+						<p class="dixixan">
+							<label id="focusonlist_li_addr"></label>
+							<span id="focusonlist_li_dis" style="float:right"></span>
+						</p>
+						</div>
+						<div class="focusonlist_li_more">
+							<em class="fp_num fp_num_0" id="focusonlist_li_beds"></em>
+							/
+							<em id="focusonlist_li_totalbeds"></em>
+							<div class="detail" onclick="AttentionListDetail(this);">详情</div>
+						</div>
+					</li>
+					<ul class="parkList" id="focusonlist_ul"></ul>
+				</nav>
+			</article>
+		</section>
+
+		<!--搜索停车场列表-->
+		<section id="searchList">
+			<article class="fp_list">
+				<nav>
+					<li id="searchList_li" style="display:none;">
+						<div class="searchParkMark">
+						<h4>
+							<label id="searchList_li_name"></label>
+							<span id="searchList_li_dis" style="float:right;"></span>
+						</h4>
+						<p>
+							<label class="search_list_addr" id="searchList_li_addr"></label>
+							<span class="search_list_price"><em id="searchList_li_price"></em>元/小时</span>
+						</p>
+						</div>
+						<div class="focusonlist_li_more clear top-border">			
+							<em class="fp_num fp_num_0" id="searchList_li_beds"></em>
+							/
+							<em id="searchList_li_totalbeds"></em>
+							<div  class="detail" onclick="GoDetailBySearch(this);">详情</div>
+						</div>
+					</li>
+					<ul class="parkList" id="searchList_ul"></ul>
+				</nav>
+			</article>
+		</section>
+		<!--预订列表-->
+		<section id="bookinglist">
+			<article class="fp_sort">
+				<ul>
+					<li class="selected" onClick="ShowParkMonthList();">近月内</li>
+					<li onClick="ShowParkAllList();">全部</li>
+				</ul>
+			</article>
+			<article class="fp_list">
+				<nav>
+					<li id="tp_park_list" style="display:none;">
+						<p id="parkName"></p>
+						<div class="tp_park_details">
+							<p class="vehicle_no" id="vehicle_no"></p>
+							<p id="bookTime" class="bookTime"></p>
+							<p style='color:#666'>请在<label id="overdueTime"></label>前入场</p>
+							<p id="parkAddress" class='parkAddress'></p>
+						</div>
+						<div class="isOverTime"></div>
+						<div class="clear"></div>
+					</li>
+					<ul class="parkList" id="booked_park_list"></ul>
+				</nav>
+			</article>
+			<article class="fp_menu hide" id="parklist_bottom_nav">
+				<nav>
+					<ul>
+						<li class="tip_li_yd tip_overtime_yd" onclick="DelayPayBookPark();">延时预订</li>
+						<li class="tip_li_yd tip_goto_yd" onclick="DrivingRouteInsiade();">去这里</li>
+						<li class="tip_li_yd tip_focuson_yd" onclick="BookListDetail(this)">详情</li>
+						<li class="tip_li_yd tip_li_oc tip_parklock_yd" onclick="ParkingLock()">车位锁</li>
+					</ul>
+				</nav>
+			</article>
+		</section>
+		<!--立即缴费-->
+		<section id="paypage">
+			<article class="pay_details">
+				<section class="pay_normal" style="">
+					<title>停车费</title>
+					<h1 id="parkFeeMsg">0.00</h1>
+				</section>
+				<section class="fee_details">
+					<dl>
+						<dt>已停时间</dt>
+						<dd >
+							<label id="serviceTime"></label>
+							分
+						</dd>
+					</dl>
+					<dl>
+						<dt>入场时间</dt>
+						<dd id="startTimePark"></dd>
+					</dl>
+					<dl>
+						<dt>停车卡号</dt>
+						<dd id="cardNoMsg"></dd>
+					</dl>
+					<dl>
+						<dt>车牌号码</dt>
+						<dd id="carNoMsg"></dd>
+					</dl>
+					<dl>
+						<dt>停车场</dt>
+						<dd id="parkNameMsg"></dd>
+					</dl>
+				</section>
+			</article>
+			<article>
+				<div class="pay_coupon">
+					<h4>停车优惠</h4>
+					<span>不使用优惠券</span>
+				</div>
+			</article>
+			<article id="scanpage">
+				<button id="btn_payPark" class="btn_pay" onClick="payOkPage();">立即支付</button>
+				<p>缴费成功后即可离场</p>
+			</article>
+			<article class="pay_couponbox" style="display:none;">
+				<nav>
+					<ul>
+						<li>
+							<label name="coupon_select" for="coupon_hour">
+								<h3>减免2小时</h3>
+								有效期：2015/06/03 - 2015/07/02
+							</label>
+							<input type="radio" id="coupon_hour" checked="" name="btn_select" value="减免2小时"/>
+						</li>
+						<li>
+							<label name="coupon_select" for="coupon_cash">
+								<h3>减免5元</h3>
+								有效期：2015/06/03 - 2015/07/02
+							</label>
+							<input type="radio" id="coupon_cash" checked="" name="btn_select" value="减免5元"/>
+						</li>
+						<li>
+							<label name="coupon_select" for="coupon_none">
+								<h3 style="line-height:40px;">不使用优惠券</h3>
+							</label>
+							<input type="radio" id="coupon_none" checked="selected" name="btn_select" value="不使用优惠券"/>
+						</li>
+					</ul>
+				</nav>
+			</article>
+		</section>
+	</article>
+	<script src="./js/jquery-1.8.2.min.js"></script>
+	<script src="./js/base.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&amp;ak=Q0AHhuvSUURpoZwqZlFip0dTpKgrW9xL"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&amp;ak=Q0AHhuvSUURpoZwqZlFip0dTpKgrW9xL&amp;services=&amp;t=20161124185815"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/library/TrafficControl/1.4/src/TrafficControl_min.js"></script>
+	<script src="./js/common.js"></script>
+	<script src="./js/TouchSlide.1.1.source.js"></script>
+	<script src="./js/addAmap.js"></script>
+	
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		$('#leftTabBox').addClass('showMsg');
+		$(".amap-logo").hide();
+	});
+	</script>
+	</body>
+</html>

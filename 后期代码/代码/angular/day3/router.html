@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>router</title>
+		<script src="../lib/angular.min.1.5.js"></script>
+		<script src="../lib/angular-route.min.js"></script>
+	</head>
+	<body>
+		<div ng-app="myApp" ng-controller="myAppCon">
+			<h2>AngularJS 路由应用</h2>
+	        <ul>
+	            <li><a href="#/">首页</a></li>
+	            <li><a href="#/computers">电脑</a></li>
+	            <li><a href="#/printers">打印机</a></li>
+	            <li><a href="#/blabla">其他</a></li>
+	            <li>
+	            	<a href="#/page/123">page</a>
+	            </li>
+	        </ul>
+	         
+	        <div ng-view>
+	        	
+	        </div>
+		</div>
+		<script>
+			//依赖 ngRoute 模块
+			var app = angular.module('myApp', ['ngRoute']);
+			
+			
+			app.directive('pageContent',function(){
+				return {
+					restrict : "EAC",
+//      			template : "<p>第一个自定义指令! {{ content }} - {{ rootText }}</p>",
+        			//只是当前指令的作用域
+//      			link : function($scope){
+//      				$scope.content = "hello directive";
+//      			},
+					//显示的模板，可以是一个 外部文件地址
+					templateUrl : "./html/home.html",
+        			//当前指令的控制器
+        			// 组件里使用控制器，方法都一样，可以向控制器注入服务模块
+        			controller : ['$scope','$http',function($scope,$http){
+            			$scope.content = "吴奔奔要唱歌了 。。。";
+            			$http.get("../day2/data.json")
+            				.then(function(res){
+            					console.log(res);
+            				})
+            		}]
+				};
+			});
+			
+			app.controller('myAppCon',['$scope',function($scope){
+				$scope.rootText = "王垚下课来唱歌";
+			}]);
+			//配置
+			//依赖 $routeProvider 服务
+			app.config(['$routeProvider', function($routeProvider){
+                $routeProvider
+                	//当当前地址栏中的 hash 值与设置的相同时
+                	//将 template 中设置的内容显示到 ng-view 中
+                	.when('/',{
+                		//如果显示的模板内容是一个 外部文件
+                		//设置 templateUrl 的值为 一个 文件地址
+                		templateUrl:'./html/home.html',
+                		controller : ['$scope',function($scope){
+                			$scope.text = "吴奔奔要唱歌了 。。。";
+                			
+                		}]
+                	})
+                	// /page/12
+                	// /page/abc
+                  	// /page/***
+                	.when("/page/:id",{
+                		templateUrl:'./html/page.html',
+                		controller : ['$scope','$routeParams',function($scope,$routeParams){
+                			console.log($routeParams);
+                		}]
+                	})
+                	.when('/computers',{
+                		//显示的模板数据
+//              		template:'<div class="page-content"></div>',
+						template:'<page-content></page-content>'
+                	})
+                	.when('/printers',{
+                		template:'这是打印机页面'
+                	})
+                	//其它，没有匹配到路由时
+                	.otherwise({
+                		//重定向，把当前的路由指向到 /
+                		redirectTo:'/'
+                	});
+            }]);
+		</script>
+	</body>
+</html>

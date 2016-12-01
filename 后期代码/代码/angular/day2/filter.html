@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>angular</title>
+	<script src="../lib/angular.min.1.5.js"></script>
+</head>
+<body>
+	
+<div ng-app="myApp" ng-controller="myAppCon">
+    对象的长度为  : {{ list | json | size  }}
+    <hr />
+    <p>
+    	{{ list | json }}
+    </p>
+</div>
+<script>
+   	angular.module('myApp', [])
+   		//创建一个获取对象长度的过滤器
+   		.filter('size',function(){
+   			return function(obj){
+   				console.log(obj);
+   				//返回长度
+                return obj.length ? obj.length : Object.keys(obj).length;
+            }
+   		})
+    	.controller('myAppCon', ['$scope', function($scope) {
+       		$scope.list = ['A', 'B', 'C'];
+     	}]);
+</script>
+
+</body>
+</html>

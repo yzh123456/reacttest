@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>指令 - ng-value</title>
+	<script src="../lib/angular.min.1.5.js"></script>
+</head>
+<body>
+	
+<div ng-app="myApp" ng-controller="myAppCon">
+    <h2>请选择</h2>
+    <p>ng-value 把多个 input 关联到一起，只有选中的单选框的值才会赋值到 ng-model 上</p>
+    <label ng-repeat="name in names">
+       {{ name }}
+       <input type="radio" ng-model="my.favorite" 
+       	ng-value="name" name="favorite">
+    </label>
+    <div>你的选择是 ： {{my.favorite}}</div>
+</div>
+<script>
+   	angular.module('myApp', [])
+    	.controller('myAppCon', ['$scope', function($scope) {
+       		$scope.names = ['A', 'B', 'C'];
+       		$scope.my = { favorite: 'A' };
+     	}]);
+</script>
+
+</body>
+</html>

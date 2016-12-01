@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>ng-class</title>
+		<script src="../lib/angular.min.1.5.js"></script>
+	</head>
+	<body>
+		<div ng-app="myApp" ng-controller="myAppCon">
+		<style>
+			.test{
+				transition: all 0.5s;
+				color: #000;
+				font-size: 14px;
+			}
+			.cls1{
+				font-size: 24px;
+			}
+			.cls2{
+				color: red;
+			}
+		</style>
+		<p>
+			c1 ： {{ c1 }}
+		</p>
+		<p>
+			c2 ： {{ c2 }}
+		</p>
+		<!-- 冒号后面的表达式为 true 时 把冒号前的值加入到 class 中 -->
+		<!-- 冒号后面的表达式不能有引号括起来 -->
+		<div class="test" ng-class="{ 'cls1' : c1, 'cls2' : c2}">
+			点击按钮测试
+		</div>
+		<hr/>
+		<button ng-click="cls1_click(true)">添加 cls1 样式</button>
+		<button ng-click="cls1_click(false)">删除 cls1 样式</button>
+		<hr/>
+		<button ng-click="cls2_click(true)">添加 cls2 样式</button>
+		<button ng-click="cls2_click(false)">删除 cls2 样式</button>
+	</div>
+	<script>
+		angular.module('myApp', [])
+			.controller('myAppCon',['$scope',function($scope){
+				$scope.cls1_click = function(state){
+					$scope.c1 = state;
+				}
+				$scope.cls2_click = function(state){
+					$scope.c2 = state;
+				}
+			}]);
+	</script>
+	</body>
+</html>

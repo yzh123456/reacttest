@@ -1,0 +1,498 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title></title>
+	<link href="./css/amap.css" type="text/css" rel="stylesheet"/>
+	<script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>	
+	<script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="./js/common.js"></script>
+</head>
+<div id="poptip" class="hide"></div>
+<section id="bookinglist">
+		<article class="fp_sort">
+			<ul>
+				<li class="selected" onClick="ShowParkMonthList();">近月内</li>
+				<li onClick="ShowParkAllList();">全部</li>
+			</ul>
+		</article>
+		<article class="fp_list">
+			<nav>
+				<li id="tp_park_list" style="display:none;">
+					<p id="parkName"></p>
+					<div class="tp_park_details">
+						<p class="vehicle_no" id="vehicle_no"></p>
+						<p id="bookTime" class="bookTime"></p>
+						<p style='color:#666'>请在<label id="overdueTime"></label>前入场</p>
+						<p id="parkAddress" class='parkAddress'></p>
+					</div>
+					<div class="isOverTime"></div>
+					<div class="clear"></div>
+				</li>
+				<ul class="parkList" id="booked_park_list"></ul>
+			</nav>
+		</article>
+		<article class="fp_menu hide" id="parklist_bottom_nav">
+			<nav>
+				<ul>
+					<li class="tip_li_yd tip_li_oc tip_overtime_yd" onclick="DelayPayBookPark()">延时预订</li>
+					<a href="map.html?from=JTC">
+					<li class="tip_li_yd tip_li_oc tip_goto_yd">回到地图</li>
+					</a>	
+					<li class="tip_li_yd tip_li_oc tip_focuson_yd" onclick="BookListDetail(this)">详情</li>
+					<li class="tip_li_yd tip_li_oc tip_parklock_yd" onclick="ParkingLock()">车位锁</li>
+
+				</ul>
+			</nav>
+		</article>
+	</section>
+<!--停车场详情图片-->
+<section id ="showParkDetailImage" style="display:none;">
+	<img style="position: fixed;width: 100%;height: 100%;">
+</section>
+<!--停车场详情-->
+<section id="parkingdetails" style="display:none;">
+	<article class="pd_hdp">
+		<div id="parkDetailImages" class="tabBox">
+			<div class="bd" id="parkDetailImagesList"></div>
+		</div>
+	</article>
+	<article class="pd_details" id="detailPark" style="width:100%;">
+		<h4>
+			<label id="parkName2"></label>
+		</h4>
+		<nav>
+			<ul>
+				<li class="tip_distance">
+					距离：
+					<span id="distance">0</span>
+				</li>
+				<li class="tip_price">
+					价格：
+					<span id="price">0</span>元/小时
+				</li>
+				<li class="tip_parkspace">
+					<div id="emptyParkPlaceCount" style="float:left;">0</div>
+					<div id="parkPlaceCount">0</div>
+				</li>
+				<li class="tip_address" id="address"></li>
+				<li class="tip_charge">
+					收费信息
+					<p id="park_fee_scale"></p>
+				</li>
+			</ul>
+		</nav>
+	</article>
+	<article class="fp_menu">
+		<nav>
+			<ul>
+				<li class="tip_li_yd tip_booking" onclick=''>预订</li>
+				<li class="tip_li_yd amap-info-btn icon_focuson clickFollow" id="detailAttention" onclick="DetailFollowPark(this);">未关注</li>		
+				<li class="tip_li_yd tip_focuson" style="border-right:0;" onclick="showFeePay();">缴费</li>
+			</ul>
+		</nav>
+	</article>
+</section>
+<!--返回按钮-->
+<div class="icon_return" id="icon_return" style="display:none;"></div>
+<script type="text/javascript" src="./js/TouchSlide.1.1.source.js"></script>
+<!-- <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=83b0556c5776206ef235888d31e8e47e"></script> -->
+<script type="text/javascript">
+var HOSTPATH = window.location.href.split('jspsn')[0]+'jspsn/parkApp/';
+var PARKDETAIL = HOSTPATH + 'queryParkInfo.servlet'; //查询停车场详情
+var PARK_BOOKING_LIST = HOSTPATH + 'queryBooking.servlet'; //预定记录
+var PARK_LOCK = window.location.href.split('jspsn')[0]+'jspsn/' + 'blueToothCarLock.servlet'// 蓝牙开锁
+var parkBookedList = {}; //显示预订的停车场列表
+var ATTENTION_PARK = HOSTPATH + 'addParkAttention.servlet';  //切换关注:是
+var CANCLE_ATTENTION = HOSTPATH + 'delParkAttention.servlet';  //切换关注:否
+var parkClicked;
+var statusParks = 0;
+var lat = "";
+var lng = "";
+window.jspsnQueryOpen = function(){
+	return sessionStorage.getItem('jspsn_unionid');
+};
+//poptip
+var poptip = function(mess) {
+	$("#poptip").html(mess);
+	$("#poptip").fadeIn(400, function() {
+		setTimeout(function() {
+			$("#poptip").fadeOut('slow');
+		}, 1200);
+	});
+};
+
+//加载地图，调用浏览器定位服务
+	var map, geolocation;
+    map = new AMap.Map('container', {
+        resizeEnable: true
+    });
+    map.plugin('AMap.Geolocation', function() {
+        geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+            timeout: 5000,          //超过10秒后停止定位，默认：无穷大
+            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            buttonPosition:'RB'
+        });
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition();
+        AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+        AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+    });
+
+    //解析定位结果
+    function onComplete(data){
+    	lng = data.position.getLng();
+    	lat = data.position.getLat();
+	}
+	//解析定位错误信息
+    function onError(data) {
+        document.getElementById('tip').innerHTML = '定位失败';
+    }
+if(localStorage.getItem("lat") && localStorage.getItem("lng")){
+	var amount = 0;
+	var dingshi = window.setInterval(
+		function(){
+			amount++;
+			if(amount < 5 && lat!="" && lng!="" && lat!=null && lng!=null){
+				ShowParkList();
+				clearInterval(dingshi);
+				return false;
+			}else if(amount > 4){
+				if(lat=="" && lng==""){
+					lat = localStorage.getItem("lat");
+					lng = localStorage.getItem("lng");
+				}
+				ShowParkList();
+				clearInterval(dingshi);
+				return false;
+			}
+		},500
+	);
+}
+//加载预订列表
+function setFoucsParkList(data) {
+	$('#booked_park_list').empty();
+
+	for (var i in data) {
+		var parkCurrent = data[i].attributes;
+		var tp = $("#tp_park_list").clone();
+		tp.show();
+		tp.removeAttr('id');
+		tp.find("#parkName").html('<b class=\"fp_list_title\">'+parkCurrent.parkname+'</b>').removeAttr('id');
+		tp.find("#bookTime").html(parkCurrent.booktime.substring(2,16)).removeAttr('id');
+		tp.find("#vehicle_no").html(parkCurrent.vehicle_no).removeAttr('id');
+		tp.find("#parkAddress").html(parkCurrent.parkaddr).removeAttr('id');
+		tp.find("#overdueTime").html(parkCurrent.overduetime.substring(2,16)).removeAttr('id');
+		if((new Date(parkCurrent.overduetime.replace(/\-/g,"/")).getTime()) < (new Date().getTime())){
+			tp.find(".isOverTime").addClass("overtime");
+		}
+		if(parkCurrent.oldbook_id){
+			tp.find('b').after('<i class="icon_delay"></i>');
+		}
+		$("#booked_park_list").append(tp);
+	}
+	parkDetailTarget = 4;
+}
+function ShowParkMonthList() {
+	var flag = false;
+	ShowParkList(flag);
+}
+function ShowParkAllList(){
+	var flag = true;
+	ShowParkList(flag);
+}
+function ShowParkList(flag) {
+	var now= new Date();
+	var year=now.getFullYear();
+	var month=now.getMonth()+1;
+	if(!flag){
+		var nowdate=9999+"-"+12+"-"+31+" "+23+":"+59;
+		var beforedate=year+"-"+month+"-"+1+" "+0+":"+0;
+	}else{
+		var nowdate=9999+"-"+12+"-"+31+" "+23+":"+59;
+		var beforedate=1970+"-"+1+"-"+1+" "+0+":"+0;
+	}
+	$(".fp_sort li:first-of-type").addClass("selected").siblings().removeClass();
+	var obj = new Object();
+	obj.pageSize = 100;
+	obj.pageIndex = 1;
+	obj.unionid = jspsnQueryOpen();
+	obj.begintime = beforedate;
+	obj.endtime = nowdate;
+
+	$.ajax({
+		url: PARK_BOOKING_LIST,
+		cache: false,
+		data: obj,
+		dataType: 'json',
+		success: function(data) {
+			if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+				setFoucsParkList(data.dataItems);
+				parkBookedList = data.dataItems;
+			}else{
+				$("#booked_park_list").empty().html("目前没有预订记录").css("text-align","center");
+			}
+		}
+	});
+}
+
+//显示预定查询里的详情。
+function BookListDetail(e) {
+	statusParks = 3;
+	goDetail();
+}
+
+var flagBookPay = false; //false未过期,true 表示过期。
+//选择已预订的停车场。
+var moveEvent = '';
+$('#booked_park_list li').live("touchmove", function() {
+	moveEvent = true;
+});
+$('#booked_park_list li').live("touchend", function() {
+	if(moveEvent == true){
+		moveEvent = false;
+		return false;
+	}
+	$(this).css("background-color", "#eefcff").siblings().css("background-color", "");
+	$('#parklist_bottom_nav').show();
+	var index = $(this).index();
+	parkClicked = parkBookedList[index].attributes;
+	parkId = parkClicked.parkid;
+	tname = parkClicked.parkname;
+	parkCode = parkClicked.parkcode;
+	oldBookId = parkClicked.id;
+	vehicleNo = parkClicked.vehicle_no;
+	amount = parkClicked.amount;
+	probebtaddress = parkClicked.probe_bt_address;
+	localStorage.setItem('vehicleNo',vehicleNo);
+	sessionStorage.setItem('parkId',parkId);
+	$(this).find('.isOverTime').hasClass('overtime') ?
+		$('.tip_li_yd.tip_overtime_yd').css('color', '#e2e2e2').attr('onclick', '') :
+		$('.tip_li_yd.tip_overtime_yd').css('color', '').attr('onclick', 'DelayPayBookPark();');
+});
+//打开停车场详情	
+function goDetail(){
+	$("#parkingdetails").show().siblings().hide();
+	$(".icon_return").show();
+	
+	var obj = new Object();
+	obj.id = parkId;
+	obj.unionid = jspsnQueryOpen();
+	obj.beforelongitude = lng;
+	obj.beforelatitude = lat;
+	$.ajax({
+		url: PARKDETAIL,
+		cache: false,
+		data: obj,
+		dataType: 'json',
+		success: function(data) {
+			if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+				parkClicked = data.dataItems[0].attributes;
+				parkDetail(data.dataItems[0].attributes);
+				TouchSlide({
+					slideCell: "#parkDetailImages"
+				});
+			}
+		}
+	});
+};
+//填充停车场详情信息
+function parkDetail(data) {
+	if (parkClicked.isattention && data.isattention == 0) {
+		$('#detailAttention,#detailAttention2').removeClass('icon_focuson2').addClass('icon_focuson').html('未关注');
+	}
+	if (parkClicked.isattention && data.isattention == 1) {
+		$('#detailAttention,#detailAttention2').removeClass('icon_focuson').addClass('icon_focuson2').html('已关注');
+	}
+	//清理图片。
+	$('#parkDetailImagesList').empty();
+	if (data.park_photo) {
+		var images = data.park_photo.split(',');
+		for (var i = 0; i < images.length; i++) {
+			if (images[i]) {
+				var tp = $("<ul class='slides'><li><img/></li></ul>");
+				tp.find('img').attr('src', images[i]);
+				$('#parkDetailImagesList').append(tp);
+			}
+		}
+	}
+	if(data.businesser_code == null || data.businesser_code == "null" || data.businesser_code == ""){
+		$(".tip_booking").css("color","#e2e2e2").attr("onclick","");
+		$(".tip_focuson").css("color","#e2e2e2").attr("onclick","");
+	}else if(data.emptyParkPlaceCount < 1){
+		$(".tip_booking").css("color","#e2e2e2").attr("onclick","");
+	}else{
+		$(".tip_booking").attr("onclick","PayBookPark()");
+	}
+	$('#parkName2').html(data.name);
+	$('#distance').html(data.distance>1000 ? parseInt(data.distance/1000).toFixed(1)+"km" : parseInt(data.distance)+"m");
+	$('#price').html(data.park_qh);
+	if(data.emptyParkPlaceCount == 0 || data.emptyParkPlaceCount < -1){
+		$('#emptyParkPlaceCount').html('0').css("color","#ccc");
+	}else if(data.emptyParkPlaceCount == -1){
+		$('#emptyParkPlaceCount').html(data.parkPlaceCount).css("color","#ccc");
+	}else{
+		$('#emptyParkPlaceCount').html(data.emptyParkPlaceCount);
+	}
+	$('#parkPlaceCount').html(data.parkPlaceCount);
+	$('#address').html(data.address);
+	$('#park_fee_scale').html(data.park_fee_scale);
+}
+
+
+$(document).on('click', '#parkDetailImagesList ul', function() {
+	var tp = $(this).find('img').attr('src');
+	$('#showParkDetailImage')
+		.find('img').attr('src', tp)
+		.parent().show().siblings().hide();
+});
+$(document).on('click', '#showParkDetailImage img', function() {
+	$('#parkingdetails').show().siblings().hide();
+});
+
+
+//详情关注。
+function DetailFollowPark(e) {
+	isFollowPark(e, statusParks);
+}
+
+//关注停车场
+function isFollowPark(e, _status) {
+	//关注。
+	if (parkClicked.isattention == 0) {
+		var obj = new Object();
+		obj.unionid = jspsnQueryOpen();
+		obj.parkid = parkId;
+		$.ajax({
+			url: ATTENTION_PARK,
+			cache: false,
+			data: obj,
+			type: 'post',
+			dataType: 'json',
+			success: function(data) {
+				if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+					$(e).removeClass('icon_focuson').addClass('icon_focuson2').html('已关注');
+					parkClicked.attentionid = data.dataItems[0].attributes.id;
+					parkClicked.isattention = 1;
+				} else {
+					poptip('对不起,关注失败。请稍后再试。');
+				}
+			}
+		});
+	}
+	//取消关注。
+	else if (parkClicked.isattention == 1) {
+		var obj = new Object();
+		obj.id = parkClicked.attentionid;
+		$.ajax({
+			url: CANCLE_ATTENTION,
+			cache: false,
+			data: obj,
+			type: 'post',
+			dataType: 'json',
+			success: function(data, textStatus, jqXHR) {
+				if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+					$(e).removeClass('icon_focuson2').addClass('icon_focuson').html('未关注');
+					parkClicked.attentionid = null;
+					parkClicked.isattention = 0;
+				}
+			}
+		});
+	}
+}
+
+//延时预订
+function DelayPayBookPark() {
+	var obj = new Object();
+	obj.id = parkId;
+	obj.unionid = jspsnQueryOpen();
+	obj.beforelongitude = lng;
+	obj.beforelatitude = lat;
+	$.ajax({
+		url: PARKDETAIL,
+		cache: false,
+		data: obj,
+		dataType: 'json',
+		success: function(data) {
+			if (data.resultCode == "0" && data.dataItems != null && data.dataItems.length > 0) {
+				parkClicked = data.dataItems[0].attributes;
+				sessionStorage.setItem("oldBookId",oldBookId);
+				sessionStorage.setItem("parkId",parkId);
+				sessionStorage.setItem("flagBookPay",true);
+				var parkClickedSession = [];
+				parkClickedSession.push(parkClicked.name);
+				parkClickedSession.push(parkClicked.emptyParkPlaceCount);
+				parkClickedSession.push(parkClicked.address);
+				parkClickedSession.push(parkClicked.longitude);
+				parkClickedSession.push(parkClicked.latitude);
+				parkClickedSession.push(parkClicked.businesser_code);
+				sessionStorage.setItem("parkClicked",parkClickedSession);
+				var host = window.location.href.split("sy_html")[0];
+				window.location.href = host + "sy_html/booking.html";
+			}
+		}
+	});
+}
+
+/*蓝牙开锁*/
+function ParkingLock(){
+	$.ajax({
+		url: PARK_LOCK,
+		cache: false,
+		async: true, //同步异步
+		data: {
+		 	BLUETOOTH_PROBE_ADDR : probebtaddress?probebtaddress:"",
+			STATUS : 0,
+			PARK_ID :parkId,
+			CAR_NO : vehicleNo
+		},
+		dataType: 'json',
+		success: function(data) {
+			if (data.resultCode == "0") {
+				poptip('开锁成功');
+			}else{
+				poptip('开锁失败');
+			}
+		}
+	});
+}
+
+//立即预订。
+function PayBookPark() {
+	sessionStorage.setItem("parkId",parkId);
+	sessionStorage.setItem("flagBookPay",false);
+	var parkClickedSession = [];
+	parkClickedSession.push(parkClicked.name);
+	parkClickedSession.push(parkClicked.emptyParkPlaceCount);
+	parkClickedSession.push(parkClicked.address);
+	parkClickedSession.push(parkClicked.longitude);
+	parkClickedSession.push(parkClicked.latitude);
+	parkClickedSession.push(parkClicked.businesser_code);
+	sessionStorage.setItem("parkClicked",parkClickedSession);
+	var host = window.location.href.split("sy_html")[0];
+	window.location.href = host + "sy_html/booking.html";
+}
+
+
+//去缴费页面
+function showFeePay(){
+	var name = $("#parkName").html();
+	localStorage.setItem('name',name);
+	window.location.href = window.location.href.split('jspsw')[0]+"jspsw/html/carNo-pay.html";
+}
+
+//返回地图
+function goBackMap(){
+	window.location.href = window.location.href.split('jspsn')[0]+"jspsn/sy_html/map.html?from=JTC";
+}
+
+//返回上级
+$("#icon_return").click(function() {
+	$("#bookinglist").show().siblings().hide();
+	$(this).hide();
+});
+</script>
+</html>
